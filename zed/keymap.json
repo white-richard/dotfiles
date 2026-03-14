@@ -1,0 +1,118 @@
+// Zed keymap
+//
+// For information on binding keys, see the Zed
+// documentation: https://zed.dev/docs/key-bindings
+//
+// To see the default key bindings run `zed: open default keymap`
+// from the command palette.
+[
+  // --- Global Bindings ---
+  {
+    "bindings": {
+      // Vim motions for moving between panes
+      "ctrl-h": "workspace::ActivatePaneLeft",
+      "ctrl-l": "workspace::ActivatePaneRight",
+      "ctrl-k": "workspace::ActivatePaneUp",
+      "ctrl-j": "workspace::ActivatePaneDown",
+      "cmd-shift-g": "git_panel::ToggleFocus",
+    },
+  },
+  // -----------------------
+  {
+    // Space + y for copy to System Clipboard
+    "context": "Editor && vim_mode == normal && !VimWaiting && !menu",
+    "bindings": {
+      "space y": "editor::Copy",
+    },
+  },
+  {
+    "context": "Editor && vim_mode == visual && !VimWaiting && !menu",
+    "bindings": {
+      "c": "editor::Cut",
+    },
+  },
+  {
+    "context": "Editor && VimControl && !VimWaiting && !menu",
+    "bindings": {
+      "space b": "git::Blame",
+      "shift-k": "editor::Hover", // Peek at definition
+      "space d": "diagnostics::Deploy", // Open Diagnostics
+    },
+  },
+  {
+    "context": "Editor && VimControl && !VimWaiting && !menu",
+    "bindings": {
+      "space o": "tab_switcher::Toggle",
+    },
+  },
+  {
+    "context": "Editor && vim_mode == visual && !VimWaiting && !VimObject",
+    "bindings": {
+      "shift-j": "editor::MoveLineDown",
+      "shift-k": "editor::MoveLineUp",
+    },
+  },
+  {
+    "context": "Editor && !(vim_mode == insert)",
+    "bindings": {
+      "space t": "workspace::NewCenterTerminal", // Open new Terminal
+      "space g d": "editor::GoToDefinition",
+      "space g a": "editor::ToggleCodeActions",
+      // Splitting on Current Window
+      "space w j": "pane::SplitAndMoveDown",
+      "space w h": "pane::SplitAndMoveLeft",
+      "space w l": "pane::SplitAndMoveRight",
+      "space w k": "pane::SplitAndMoveUp",
+      "space n c": "editor::ToggleMinimap",
+    },
+  },
+  {
+    "context": "!(vim_mode == insert)",
+    "bindings": {},
+  },
+  {
+    "context": "Editor && vim_mode == normal && vim_operator == none && !VimWaiting",
+    "bindings": {
+      "down": "vim::ResizePaneDown",
+      "left": "vim::ResizePaneLeft",
+      "up": "vim::ResizePaneUp",
+      "right": "vim::ResizePaneRight",
+    },
+  },
+  {
+    "context": "Workspace && !(vim_mode == insert)",
+    "bindings": {
+      // Search for files
+      "shift shift": "file_finder::Toggle",
+    },
+  },
+  {
+    "context": "Editor && vim_mode == insert",
+    "bindings": {
+      // "j k": "vim::NormalBefore"
+    },
+  },
+  {
+    // Maps cmd+{n} to file tabs
+    "context": "Pane",
+    "bindings": {
+      "cmd-1": ["pane::ActivateItem", 0],
+      "cmd-2": ["pane::ActivateItem", 1],
+      "cmd-3": ["pane::ActivateItem", 2],
+      "cmd-4": ["pane::ActivateItem", 3],
+      "cmd-5": ["pane::ActivateItem", 4],
+      "cmd-6": ["pane::ActivateItem", 5],
+      "cmd-7": ["pane::ActivateItem", 6],
+      "cmd-8": ["pane::ActivateItem", 7],
+      "cmd-9": ["pane::ActivateItem", 8],
+    },
+  },
+  {
+    "context": "ProjectPanel",
+    "bindings": {
+      "backspace": "project_panel::Trash",
+      "delete": "project_panel::Trash",
+      "shift delete": "project_panel::Trash",
+    },
+  },
+]

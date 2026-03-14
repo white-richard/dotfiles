@@ -1,0 +1,264 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+  "git_panel": {
+    "tree_view": true,
+  },
+  "prettier": {
+    "allowed": true,
+  },
+  "gutter": {
+    "breakpoints": true,
+  },
+  "edit_predictions": {
+    "provider": "copilot",
+    "mode": "eager",
+  },
+  "agent": {
+    "tool_permissions": {
+      "default": "allow",
+    },
+    "default_profile": "write",
+    "inline_assistant_model": {
+      "provider": "copilot_chat",
+      "model": "oswe-vscode-prime",
+    },
+    "default_model": {
+      "provider": "copilot_chat",
+      "model": "gpt-5.3-codex",
+    },
+    "favorite_models": [],
+    "model_parameters": [],
+  },
+  "ssh_connections": [
+    {
+      "host": "wpeb-server",
+      "args": [],
+      "projects": [
+        {
+          "paths": ["/home/richw"],
+        },
+        {
+          "paths": ["/home/richw/.code/hyp-mammo/repos/ladder/./"],
+        },
+        {
+          "paths": ["/home/richw/.code/i2moe/./"],
+        },
+      ],
+    },
+    {
+      "host": "home",
+      "args": [],
+      "projects": [
+        {
+          "paths": ["/home/richiewhite/.code/atc-slr"],
+        },
+        {
+          "paths": ["/home/richiewhite/.code/courses/pattern-recognition/./"],
+        },
+        {
+          "paths": ["/home/richiewhite/.code/repos/paperbanana/./"],
+        },
+        {
+          "paths": ["/home/richiewhite/.code/repos/repo-sense/./"],
+        },
+      ],
+    },
+    {
+      "host": "wpeb-print",
+      "args": [],
+      "projects": [
+        {
+          "paths": ["/home/richw/.code/asl-llm/./"],
+        },
+        {
+          "paths": ["/home/richw/.code/ladder"],
+        },
+      ],
+    },
+    {
+      "host": "wpeb-mary",
+      "args": [],
+      "projects": [],
+    },
+  ],
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false,
+  },
+  "vim_mode": true,
+  "vim": {
+    "use_system_clipboard": "never",
+  },
+  "terminal": {
+    "copy_on_select": false,
+    "shell": {
+      "program": "/opt/homebrew/bin/fish",
+    },
+  },
+  "base_keymap": "VSCode",
+  "minimap": {
+    "show": "never",
+  },
+  "autosave": {
+    "after_delay": {
+      "milliseconds": 500,
+    },
+  },
+  "icon_theme": {
+    "mode": "system",
+    "light": "Zed (Default)",
+    "dark": "Zed (Default)",
+  },
+  "ui_font_size": 16,
+  "buffer_font_size": 11.0,
+  "theme": {
+    "mode": "system",
+    "light": "Gruvbox Light",
+    "dark": "Gruvbox Dark",
+  },
+  // Scroll Bar Related Settings
+  "scrollbar": {
+    // When to show the scrollbar in the editor (auto, system, always, never)
+    "show": "auto",
+    "cursors": true, // Show cursor positions in the scrollbar.
+    "git_diff": true, // Show git diff indicators in the scrollbar.
+    "search_results": true, // Show buffer search results in the scrollbar.
+    "selected_text": true, // Show selected text occurrences in the scrollbar.
+    "selected_symbol": true, // Show selected symbol occurrences in the scrollbar.
+    "diagnostics": "all", // Show diagnostics (none, error, warning, information, all)
+    "axes": {
+      "horizontal": true, // Show/hide the horizontal scrollbar
+      "vertical": true, // Show/hide the vertical scrollbar
+    },
+  },
+  "enable_language_server": true,
+  "format_on_save": "on",
+  "languages": {
+    "Markdown": {
+      "show_edit_predictions": false,
+    },
+    "Python": {
+      "language_servers": ["ruff", "!basedpyright", "pylsp"],
+    },
+    "Typst": {
+      "formatter": "language_server",
+    },
+  },
+  "lsp": {
+    "texlab": {
+      "settings": {
+        "texlab": {
+          "build": {
+            "onSave": true,
+            "forwardSearchAfter": true,
+            "executable": "latexmk",
+            "args": ["-pdf", "-interaction=nonstopmode", "-synctex=1", "%f"],
+          },
+          "forwardSearch": {
+            "executable": "zathura", // Replace with your viewer (e.g., skim, SumatraPDF, okular)
+            "args": ["--synctex-forward", "%l:1:%f", "%p"],
+          },
+        },
+      },
+    },
+    "ruff": {
+      "initialization_options": {
+        "settings": {
+          "configurationPreference": "filesystemFirst",
+          "configuration": {
+            "format": {
+              "quote-style": "double",
+              "skip-magic-trailing-comma": false,
+            },
+          },
+          "codeAction": {
+            "disableRuleComment": { "enable": false },
+            "fixViolation": { "enable": true },
+          },
+          "lint": {
+            "select": [
+              "E", // Style errors
+              "F", // Python errors
+              "I", // Import sorting
+              "B", // Bugbear rules
+              "UP", // Python upgrade checks
+              "C4", // Comprehension checks
+              "FA", // Future annotations
+              "SIM", // Simplification
+              "PTH", // pathlib usage
+              "TC", // Type-checking import conventions],
+            ],
+            "extendSelect": ["I", "PTH105"],
+            "unsafeFixes": true,
+            "enable": true,
+          },
+          "fixAll": true,
+          "organizeImports": true,
+          "showSyntaxErrors": true,
+          "lineLength": 100,
+        },
+      },
+    },
+    "tinymist": {
+      "settings": {
+        "exportPdf": "onSave",
+        "outputPath": "$root/$name",
+      },
+    },
+  },
+  "code_actions_on_format": {
+    "source.organizeImports": true,
+    "source.fixAll": true,
+  },
+  // Blurred background
+  // "experimental.theme_overrides": {
+  //   "background.appearance": "blurred",
+  //   "background": "#00000070",
+  //   "panel.background": "#00000030",
+  //   "editor.background": "#00000020",
+  //   "status_bar.background": "#00000090"
+  // },
+  "relative_line_numbers": "enabled",
+  "scroll_sensitivity": 1.0, // Scroll sensitivity multiplier
+  // Scroll sensitivity multiplier for fast scrolling (hold alt while scrolling)
+  "fast_scroll_sensitivity": 4.0,
+  "cursor_blink": false,
+  "vertical_scroll_margin": 12,
+  "tab_bar": {
+    "show": false,
+  },
+  "toolbar": {
+    "code_actions": false,
+    "breadcrumbs": true, // Scroll sensitivity multiplier
+    "quick_actions": true, // Whether to show quick action buttons
+  },
+  // Status bar related settings
+  "status_bar": {
+    // Show/hide a button that displays the active buffer's language.
+    // Clicking the button brings up the language selector.
+    "active_language_button": false,
+    // Show/hide a button that displays the cursor's position.
+    // Clicking the button brings up an input for jumping to a line and column.
+    "cursor_position_button": true,
+    // Show/hide a button that displays the buffer's line-ending mode.
+    // Clicking the button brings up the line-ending selector.
+    "line_endings_button": false,
+    // Show/hide a button that displays the buffer's character encoding.
+    // If set to "non_utf8", the button is hidden only for UTF-8 without BOM.
+    "active_encoding_button": "non_utf8",
+  },
+  "global_lsp_settings": {
+    // Show/hide the LSP button in the status bar.
+    // Activity from the LSP is still shown.
+    // Button is not shown if "enable_language_server" if false.
+    "button": true,
+  },
+  "use_system_path_prompts": false,
+}
