@@ -1,0 +1,32 @@
+# ruff.toml
+
+line-length = 100
+unsafe-fixes = true
+
+[lint]
+fixable = ["ALL"]
+select = [
+    "E",   # Style errors
+    "F",   # Python errors
+    "I",   # Import sorting
+    "B",   # Bugbear rules
+    "UP",  # Python upgrade checks
+    "C4",  # Comprehension checks
+    "FA",  # Future annotations
+    "SIM", # Simplification
+    "PTH", # pathlib usage
+    "TC",  # Type-checking import conventions
+]
+extend-select = [
+    "ALL"
+    # "PTH105",
+    # "I",
+]
+ignore = [
+    "T201"
+]
+
+
+[format]
+quote-style = "double"
+skip-magic-trailing-comma = false

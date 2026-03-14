@@ -144,6 +144,10 @@
     "Markdown": {
       "show_edit_predictions": false,
     },
+    "TOML": {
+      "formatter": "language_server",
+      "format_on_save": "off",
+    },
     "Python": {
       "language_servers": ["ruff", "!basedpyright", "pylsp"],
     },
@@ -171,38 +175,8 @@
     "ruff": {
       "initialization_options": {
         "settings": {
+          "configuration": "~/.config/ruff/ruff.toml",
           "configurationPreference": "filesystemFirst",
-          "configuration": {
-            "format": {
-              "quote-style": "double",
-              "skip-magic-trailing-comma": false,
-            },
-          },
-          "codeAction": {
-            "disableRuleComment": { "enable": false },
-            "fixViolation": { "enable": true },
-          },
-          "lint": {
-            "select": [
-              "E", // Style errors
-              "F", // Python errors
-              "I", // Import sorting
-              "B", // Bugbear rules
-              "UP", // Python upgrade checks
-              "C4", // Comprehension checks
-              "FA", // Future annotations
-              "SIM", // Simplification
-              "PTH", // pathlib usage
-              "TC", // Type-checking import conventions],
-            ],
-            "extendSelect": ["I", "PTH105"],
-            "unsafeFixes": true,
-            "enable": true,
-          },
-          "fixAll": true,
-          "organizeImports": true,
-          "showSyntaxErrors": true,
-          "lineLength": 100,
         },
       },
     },
