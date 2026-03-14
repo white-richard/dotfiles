@@ -18,13 +18,14 @@ select = [
     "TC",  # Type-checking import conventions
 ]
 extend-select = [
-    "ALL"
+    "ALL",
     # "PTH105",
     # "I",
 ]
 ignore = [
     "T201", # print statement
-    "RUF002" # ambiguous variable names
+    "RUF002", # ambiguous variable names
+    "ERA001", # commented-out code
 ]
 
 
