@@ -15,7 +15,7 @@ z-prune = pull --prune
 z-current = branch --show-current
 log-pretty = log --all --decorate --oneline --graph
 
-cko = "!f() { git checkout YOUR_NAME/\"$1\"; }; f \"$@\""
+cko = "!f() { git checkout white-richard/\"$1\"; }; f \"$@\""
 
 cf = "!f() { emacs ~/.gitconfig; }; f;"
 
@@ -29,16 +29,14 @@ cowave= "!f() { git add -A; git commit -m \"$1\" -m \"Co-authored-by: $2 <$3>\";
 
 alex-cowave = "!f() { git add -A; git commit -m \"$1\" -m \"Co-authored-by: alex <alexzorzella@gmail.com>\"; git push; }; f \"$@\""
 
-bait  = "!f() { git checkout -b YOUR_NAME/\"$1\"; git push --set-upstream origin YOUR_NAME/\"$1\"; }; f \"$@\""
+bait  = "!f() { git checkout -b white-richard/\"$1\"; git push --set-upstream origin white-richard/\"$1\"; }; f \"$@\""
 
 reel = "!f() { git co main; git pull --prune; z-git-delete-gone-branches.sh; git bait $1; }; f \"$@\""
 
-gen-ssh = "!f() { ssh-keygen -t ed25519 -C YOUR_EMAIL; cat ~/.ssh/id_ed25519.pub; }; f;"
-mask-ssh = "!f() { chmod 600 ~/.ssh/id_ed25519; chmod 644 ~/.ssh/id_ed25519.pub; }; f;"
 ping-ssh = "!f() { ssh -T git@github.com; }; f;"
 
-set-origin = "!f() { git remote set-url origin \"$1\"; }; f \"$@\""
-set-upstream = "!f() { git remote set-url upstream \"$1\"; }; f \"$@\""
+setorigin = "!f() { git remote set-url origin \"$1\"; }; f \"$@\""
+setupstream = "!f() { git remote set-url upstream \"$1\"; }; f \"$@\""
 rig = set-origin
 
 whereami = remote -v
