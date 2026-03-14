@@ -23,7 +23,8 @@ extend-select = [
     # "I",
 ]
 ignore = [
-    "T201"
+    "T201", # print statement
+    "RUF002" # ambiguous variable names
 ]
 
 
