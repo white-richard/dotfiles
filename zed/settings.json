@@ -24,7 +24,7 @@
     "tool_permissions": {
       "default": "allow",
     },
-    "default_profile": "write",
+    "default_profile": "ask",
     "inline_assistant_model": {
       "provider": "copilot_chat",
       "model": "oswe-vscode-prime",
