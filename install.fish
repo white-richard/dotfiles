@@ -12,7 +12,7 @@ set -l remote_cmd "cd ~/.dotfiles && git pull && fish install.fish"
 # --- Config ---
 
 # Configs to be symlinked
-set APPS fish nvim tmux zed git ruff
+set APPS fish nvim tmux zed git ruff ghostty
 
 # Machines to distribute to in .env as: SSH_MACHINES="machine1 machine2"
 if test -f .env
