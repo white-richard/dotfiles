@@ -18,7 +18,7 @@
   },
   "edit_predictions": {
     "provider": "copilot",
-    "mode": "eager",
+    "mode": "subtle",
   },
   "agent": {
     "tool_permissions": {
@@ -42,51 +42,75 @@
       "args": [],
       "projects": [
         {
-          "paths": ["/home/richw"],
+          "paths": [
+            "/home/richw"
+          ]
         },
         {
-          "paths": ["/home/richw/.code/hyp-mammo/repos/ladder/./"],
+          "paths": [
+            "/home/richw/.code/hyp-mammo/repos/ladder/./"
+          ]
         },
         {
-          "paths": ["/home/richw/.code/i2moe/./"],
-        },
-      ],
+          "paths": [
+            "/home/richw/.code/i2moe/./"
+          ]
+        }
+      ]
     },
     {
       "host": "home",
       "args": [],
       "projects": [
         {
-          "paths": ["/home/richiewhite/.code/atc-slr"],
+          "paths": [
+            "/home/richiewhite/.code/atc-slr"
+          ]
         },
         {
-          "paths": ["/home/richiewhite/.code/courses/pattern-recognition/./"],
+          "paths": [
+            "/home/richiewhite/.code/courses/pattern-recognition/./"
+          ]
         },
         {
-          "paths": ["/home/richiewhite/.code/repos/paperbanana/./"],
+          "paths": [
+            "/home/richiewhite/.code/mammoclip/./"
+          ]
         },
         {
-          "paths": ["/home/richiewhite/.code/repos/repo-sense/./"],
+          "paths": [
+            "/home/richiewhite/.code/repos/paperbanana/./"
+          ]
         },
-      ],
+        {
+          "paths": [
+            "/home/richiewhite/.code/repos/repo-sense/./"
+          ]
+        }
+      ]
     },
     {
       "host": "wpeb-print",
       "args": [],
       "projects": [
         {
-          "paths": ["/home/richw/.code/asl-llm/./"],
-        },
-        {
-          "paths": ["/home/richw/.code/ladder"],
-        },
-      ],
+          "paths": [
+            "/home/richw/.code/asl-llm/./"
+          ]
+        }
+      ]
     },
     {
       "host": "wpeb-mary",
       "args": [],
-      "projects": [],
-    },
+      "projects": [
+        {
+          "paths": [
+            "/home/richw"
+          ]
+        }
+      ]
+    }
   ],
   "telemetry": {
     "diagnostics": false,
