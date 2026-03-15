@@ -26,6 +26,7 @@ ignore = [
     "T201", # print statement
     "RUF002", # ambiguous variable names
     "ERA001", # commented-out code
+    "D100", # missing docstring in public module
 ]
 
 
