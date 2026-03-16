@@ -17,6 +17,21 @@
       "cmd-shift-g": "git_panel::ToggleFocus",
     },
   },
+  {
+    "context": "GitPanel",
+    "bindings": {
+      "ctrl-g p": "git::Push",
+      "ctrl-g o": "git::PullRebase",
+    },
+  },
+  {
+    "context": "ProjectPanel",
+    "bindings": {
+      "backspace": "project_panel::Trash",
+      "delete": "project_panel::Trash",
+      "shift delete": "project_panel::Trash",
+    },
+  },
   // -----------------------
   {
     // Space + y for copy to System Clipboard
@@ -105,14 +120,6 @@
       "cmd-7": ["pane::ActivateItem", 6],
       "cmd-8": ["pane::ActivateItem", 7],
       "cmd-9": ["pane::ActivateItem", 8],
-    },
-  },
-  {
-    "context": "ProjectPanel",
-    "bindings": {
-      "backspace": "project_panel::Trash",
-      "delete": "project_panel::Trash",
-      "shift delete": "project_panel::Trash",
     },
   },
 ]
