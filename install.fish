@@ -24,6 +24,10 @@ end
 echo "Starting..."
 echo "------------------------------------"
 
+# Create bashrc symlink
+rm "$HOME/.bashrc"
+ln -s "$DOTFILES_DIR/.bashrc" "$HOME/.bashrc"
+
 for app in $APPS
     set -l source_path "$DOTFILES_DIR/$app"
     set -l target_path "$CONFIG_DIR/$app"

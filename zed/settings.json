@@ -24,14 +24,14 @@
     "tool_permissions": {
       "default": "allow",
     },
-    "default_profile": "ask",
+    "default_profile": "write",
     "inline_assistant_model": {
       "provider": "copilot_chat",
       "model": "oswe-vscode-prime",
     },
     "default_model": {
       "provider": "copilot_chat",
-      "model": "gpt-5-mini",
+      "model": "gpt-5.3-codex",
     },
     "favorite_models": [],
     "model_parameters": [],
@@ -97,6 +97,11 @@
           "paths": [
             "/home/richw/.code/asl-llm/./"
           ]
+        },
+        {
+          "paths": [
+            "/home/richw/.code/mammoclip/./"
+          ]
         }
       ]
     },
@@ -107,6 +112,11 @@
         {
           "paths": [
             "/home/richw"
+          ]
+        },
+        {
+          "paths": [
+            "/home/richw/.code/asl-llm/./"
           ]
         }
       ]
