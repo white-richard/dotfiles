@@ -5,5 +5,6 @@ function rm-venvs --description "Recursively delete all .venv dirs from a given 
         set search_path .
     end
     
-    find $search_path -type d \( -name ".venv" -o -name "venv" \) -prune -exec echo "Removing {}" \; -exec rm -rf {} \;
+    find $search_path -type d \( -name ".venv" -o -name "venv" \) -prune -exec echo "Removing {}" \; -exec rm -rf {} \; 
+    deactivate
 end
