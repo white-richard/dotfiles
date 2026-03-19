@@ -30,8 +30,10 @@
       "model": "oswe-vscode-prime",
     },
     "default_model": {
+      "effort": "high",
+      "enable_thinking": false,
       "provider": "copilot_chat",
-      "model": "gpt-5.3-codex",
+      "model": "gpt-5-mini",
     },
     "favorite_models": [],
     "model_parameters": [],
@@ -44,11 +46,6 @@
         {
           "paths": [
             "/home/richw"
-          ]
-        },
-        {
-          "paths": [
-            "/home/richw/.code/hyp-mammo/repos/ladder/./"
           ]
         },
         {
@@ -74,7 +71,7 @@
         },
         {
           "paths": [
-            "/home/richiewhite/.code/mammoclip/./"
+            "/home/richiewhite/.code/latent-space/./"
           ]
         },
         {
