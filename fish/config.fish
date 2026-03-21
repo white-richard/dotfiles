@@ -66,6 +66,11 @@ set -gx PATH $PATH "$ZVM_INSTALL/"
 # Vim keybindings
 fish_vi_key_bindings
 
+# Bandaid fix for tailscale on mac
+if test (uname) = "Darwin"
+    alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
+end
+
 if status is-interactive
     # Commands to run in interactive sessions can go here
 end
