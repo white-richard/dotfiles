@@ -52,6 +52,11 @@
           "paths": [
             "/home/richw/.code/i2moe/./"
           ]
+        },
+        {
+          "paths": [
+            "/home/richw/.code/nut-ups-cutoff/./"
+          ]
         }
       ]
     },
@@ -99,6 +104,11 @@
           "paths": [
             "/home/richw/.code/mammoclip/./"
           ]
+        },
+        {
+          "paths": [
+            "/home/richw/.code/nut-lab-rollout/./"
+          ]
         }
       ]
     },
@@ -114,6 +124,11 @@
         {
           "paths": [
             "/home/richw/.code/asl-llm/./"
+          ]
+        },
+        {
+          "paths": [
+            "/home/richw/.code/nut-ups-cutoff/./"
           ]
         }
       ]

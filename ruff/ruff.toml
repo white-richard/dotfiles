@@ -27,6 +27,7 @@ ignore = [
     "RUF002", # ambiguous variable names
     "ERA001", # commented-out code
     "D100", # missing docstring in public module
+    "D101", # missing docstring in public class
 ]
 
 
