@@ -29,6 +29,7 @@ ignore = [
     "D100", # missing docstring in public module
     "D101", # missing docstring in public class
     "D205", # 1 blank line required between summary line and description
+    "N806", # variable in function should be lowercase
 ]
 
 
