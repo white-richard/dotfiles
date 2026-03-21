@@ -44,7 +44,7 @@
 
 # font-family = MesloLGS Nerd Font Mono
 # font-family = "IBM Plex Mono"
-font-size = 11
+font-size = 16
 theme = light:"Gruvbox Light",dark:"Gruvbox Dark"
 
 background-blur = true
