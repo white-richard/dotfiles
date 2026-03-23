@@ -45,11 +45,6 @@
       "projects": [
         {
           "paths": [
-            "/home/richw"
-          ]
-        },
-        {
-          "paths": [
             "/home/richw/.code/i2moe/./"
           ]
         },
@@ -98,6 +93,11 @@
         {
           "paths": [
             "/home/richw/.code/asl-llm/./"
+          ]
+        },
+        {
+          "paths": [
+            "/home/richw/.code/latent-space/./"
           ]
         },
         {
