@@ -30,6 +30,8 @@ ignore = [
     "D101", # missing docstring in public class
     "D205", # 1 blank line required between summary line and description
     "N806", # variable in function should be lowercase
+    "D103", # Missing docstring in public function
+    "ANN001", # Missing type annotation for function argument `image`
 ]
 
 
