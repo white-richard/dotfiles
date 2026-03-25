@@ -1,5 +1,4 @@
 function syncslurm
-    # Pull worker hostnames from slurm.conf, excluding the host itself
     set host (hostname)
     set workers (grep "^NodeName=" /etc/slurm/slurm.conf \
         | grep -oP 'NodeName=\K\S+' \
@@ -12,5 +11,11 @@ function syncslurm
     end
 
     sudo systemctl restart slurmctld
+
+    # Resume any nodes that went unk after restart
+    for node in $host $workers
+        sudo scontrol update NodeName=$node State=RESUME 2>/dev/null
+    end
+
     sinfo
 end
