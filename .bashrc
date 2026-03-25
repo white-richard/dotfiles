@@ -20,9 +20,14 @@ export PATH="$PATH:$ZVM_INSTALL/"
 # Local bin
 export PATH="$HOME/.local/bin:$PATH"
 
+export BASH_SILENCE_DEPRECATION_WARNING=1
+
 # Auto-launch fish
-if [[ $- == *i* ]] && [[ $- != *c* ]]; then
+if [[ $- == *i* ]]; then
     if [ -z "$INSIDE_FISH" ]; then
-        exec fish
+        parent=$(ps -o comm= -p $PPID 2>/dev/null)
+        if [[ "$parent" != *fish* ]]; then
+            exec fish
+        fi
     fi
 fi
