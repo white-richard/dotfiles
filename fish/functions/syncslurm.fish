@@ -11,11 +11,14 @@ function syncslurm
     end
 
     sudo systemctl restart slurmctld
+    sleep 3
 
     # Resume any nodes that went unk after restart
     for node in $host $workers
         sudo scontrol update NodeName=$node State=RESUME 2>/dev/null
     end
+    
+    sleep 3
 
     sinfo
 end
