@@ -44,7 +44,6 @@
 
 # font-family = "IBM Plex Mono"
 theme = light:"Gruvbox Light",dark:"Gruvbox Dark"
-background-opacity = 0.95
 font-size = 16
 font-thicken = true
 
@@ -53,15 +52,9 @@ mouse-hide-while-typing = true
 cursor-style = block
 shell-integration-features = no-cursor,sudo,title
 shell-integration = fish
-
-# macos only
-background-blur = true
-macos-titlebar-style = transparent
-
 # All windows are the same instance
 gtk-single-instance = true
 
-# Linux only
-# window-decoration = false
-background-blur-radius = 20
-
+# Per OS settings
+config-file = ?linux.conf
+config-file = ?macos.conf
