@@ -42,6 +42,7 @@ function ,sjob
             --output=/data/{$job_name}_%j.out \
             --nodes=$nodes \
             --ntasks=$ntasks \
+            --partition=gpu \
+            --gres=gpu:$gpus \
             /data/job.sh
 end
-
