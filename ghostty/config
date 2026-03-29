@@ -56,5 +56,5 @@ shell-integration = fish
 gtk-single-instance = true
 
 # Per OS settings
-config-file = ?linux.conf
 config-file = ?macos.conf
+config-file = ?linux.conf
