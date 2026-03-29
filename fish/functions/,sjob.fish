@@ -38,7 +38,7 @@ function ,sjob
         --output=/data/{$job_name}_%j.out \
         --nodes=$nodes \
         --ntasks=$ntasks \
-        --gpus=$gpus \
+        --gres=gpu:$gpus \
         ~/.slurm/job.sh
 end
 
