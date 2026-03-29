@@ -9,7 +9,6 @@ function ,sjob
     set ntasks 1
     set gpus 1
 
-    # Parse args: slurm-submit --gpus 1 --time 04:00:00 --image myimage:tag
     argparse \
         'i/image=' \
         'n/nodes=' \
@@ -37,5 +36,10 @@ function ,sjob
         NODES=$nodes \
         NTASKS=$ntasks \
         GPUS=$gpus \
-        sbatch ~/.slurm/job.sh
+        sbatch \
+            --nodes=$nodes \
+            --ntasks=$ntasks \
+            --gpus=$gpus \
+            ~/.slurm/job.sh
 end
+
