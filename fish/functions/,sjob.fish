@@ -33,13 +33,12 @@ function ,sjob
         JOB_NAME=$job_name \
         PROJECT_DIR=$project_dir \
         CONTAINER_IMAGE=$container_image \
-        NODES=$nodes \
-        NTASKS=$ntasks \
-        GPUS=$gpus \
-        sbatch \
-            --nodes=$nodes \
-            --ntasks=$ntasks \
-            --gpus=$gpus \
-            ~/.slurm/job.sh
+    sbatch \
+        --job-name=$job_name \
+        --output=/data/{$job_name}_%j.out \
+        --nodes=$nodes \
+        --ntasks=$ntasks \
+        --gpus=$gpus \
+        ~/.slurm/job.sh
 end
 
