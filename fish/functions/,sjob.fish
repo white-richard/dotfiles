@@ -29,16 +29,18 @@ function ,sjob
     echo "  Nodes:   $nodes  Tasks: $ntasks  GPUs: $gpus"
     echo ""
 
-    env \
-        JOB_NAME=$job_name \
-        PROJECT_DIR=$project_dir \
-        CONTAINER_IMAGE=$container_image \
-    sbatch \
-        --job-name=$job_name \
-        --output=/data/{$job_name}_%j.out \
-        --nodes=$nodes \
-        --ntasks=$ntasks \
-        --gres=gpu:$gpus \
-        ~/.slurm/job.sh
+    docker cp ~/.slurm/job.sh slurmctld:/data/job.sh
+
+    docker exec \
+        -e JOB_NAME=$job_name \
+        -e PROJECT_DIR=$project_dir \
+        -e CONTAINER_IMAGE=$container_image \
+        slurmctld \
+        sbatch \
+            --job-name=$job_name \
+            --output=/data/{$job_name}_%j.out \
+            --nodes=$nodes \
+            --ntasks=$ntasks \
+            /data/job.sh
 end
 
