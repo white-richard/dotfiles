@@ -35,6 +35,7 @@ function ,sjob
         -e JOB_NAME=$job_name \
         -e PROJECT_DIR=$project_dir \
         -e CONTAINER_IMAGE=$container_image \
+        -e HOST_HOME=$HOME \
         slurmctld \
         sbatch \
             --job-name=$job_name \
