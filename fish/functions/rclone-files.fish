@@ -9,14 +9,11 @@ function rclone-files --description "Copy a directory of files to a remote desti
     end
 
     # rclone copy $zip_path :sftp,ssh="ssh $ssh_alias":$remote_dest --transfers 12 --order-by size,mixed,75 --max-backlog 10000 --b2-chunk-size 256M --progress --checksum --retries 5 --retries-sleep 30s
-
-    rclone copy $zip_path :sftp,ssh="ssh $ssh_alias":$remote_dest \
-    --transfers 32 \
-    --checkers 16 \
-    --max-backlog 20000 \
-    --buffer-size 32M \
-    --sftp-concurrency 8 \
-    --no-traverse \
+    # rclone copy $zip_path :sftp,ssh="ssh $ssh_alias",key_file="$HOME/.ssh/id_ed25519":$remote_dest \
+    rclone copy $zip_path wpeb-print:$remote_dest \
+    --transfers 12 \
+    --order-by size,mixed,75 \
+    --max-backlog 10000 \
     --progress \
     --retries 5 \
     --retries-sleep 10s \
