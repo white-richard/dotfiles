@@ -33,7 +33,7 @@
       "effort": "high",
       "enable_thinking": false,
       "provider": "copilot_chat",
-      "model": "gpt-5-mini",
+      "model": "gpt-5.4-mini",
     },
     "favorite_models": [],
     "model_parameters": [],
