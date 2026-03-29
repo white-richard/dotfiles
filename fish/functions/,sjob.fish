@@ -4,7 +4,7 @@ function ,sjob
     set job_name (basename $project_dir)
 
     # Defaults with option overrides
-    set container_image "pytorch/pytorch:2.11.0-cuda12.8-cudnn9-devel"
+    set container_image (cat ~/.slurm/default_image)
     set nodes 1
     set ntasks 1
     set gpus 1
