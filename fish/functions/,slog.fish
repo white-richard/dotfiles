@@ -1,23 +1,20 @@
 function ,slog
     set job_name (basename (pwd))
-    argparse \
-        'w/worker=' \
-        -- $argv
-    or return 1
+    set pattern "/data/$job_name""_*.out"
 
-    if set -q _flag_worker
-        # Find the most recent job ID for this job name that ran on the specified node
-        set job_id (docker exec slurmctld bash -c \
-            "sacct -n -X --name=$job_name --nodelist=$_flag_worker --format=JobID --state=ANY \
-             | tail -1 | tr -d ' '")
-        if test -z "$job_id"
-            echo "No jobs found for '$job_name' on worker '$_flag_worker'"
-            return 1
+    set worker ""
+    set i 1
+    while test $i -le (count $argv)
+        if test $argv[$i] = "-w"
+            set i (math $i + 1)
+            set worker $argv[$i]
         end
-        echo "Tailing job $job_id (ran on $_flag_worker)..."
-        docker exec slurmctld bash -c "tail -f -n +1 /data/{$job_name}_{$job_id}.out"
-    else
-        set pattern "/data/$job_name""_*.out"
+        set i (math $i + 1)
+    end
+
+    if test -z "$worker"
         docker exec slurmctld bash -c "tail -f -n +1 \$(ls -t $pattern | head -1)"
+    else
+        ssh $worker "docker exec $worker bash -c \"tail -f -n +1 \\\$(ls -t $pattern | head -1)\""
     end
 end
