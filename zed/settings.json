@@ -33,7 +33,7 @@
       "effort": "high",
       "enable_thinking": false,
       "provider": "copilot_chat",
-      "model": "gpt-5.4-mini",
+      "model": "gpt-5.2-codex",
     },
     "favorite_models": [],
     "model_parameters": [],
@@ -42,18 +42,7 @@
     {
       "host": "wpeb-server",
       "args": [],
-      "projects": [
-        {
-          "paths": [
-            "/home/richw/.code/i2moe/./"
-          ]
-        },
-        {
-          "paths": [
-            "/home/richw/.code/nut-ups-cutoff/./"
-          ]
-        }
-      ]
+      "projects": []
     },
     {
       "host": "home",
@@ -72,6 +61,11 @@
         {
           "paths": [
             "/home/richiewhite/.code/i2moe/./"
+          ]
+        },
+        {
+          "paths": [
+            "/home/richiewhite/.code/latent-space/./"
           ]
         },
         {
@@ -97,17 +91,17 @@
         },
         {
           "paths": [
+            "/home/richw/.code/i2moe/./"
+          ]
+        },
+        {
+          "paths": [
             "/home/richw/.code/latent-space/./"
           ]
         },
         {
           "paths": [
             "/home/richw/.code/mammoclip/./"
-          ]
-        },
-        {
-          "paths": [
-            "/home/richw/.code/nut-lab-rollout/./"
           ]
         }
       ]
@@ -118,17 +112,7 @@
       "projects": [
         {
           "paths": [
-            "/home/richw"
-          ]
-        },
-        {
-          "paths": [
             "/home/richw/.code/asl-llm/./"
-          ]
-        },
-        {
-          "paths": [
-            "/home/richw/.code/nut-ups-cutoff/./"
           ]
         }
       ]
@@ -195,6 +179,7 @@
       "format_on_save": "off",
     },
     "Python": {
+      "show_edit_predictions": true,
       "language_servers": ["ruff", "!basedpyright", "pylsp"],
     },
     "Typst": {
