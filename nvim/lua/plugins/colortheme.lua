@@ -1,40 +1,35 @@
 return {
-  'Mofiqul/vscode.nvim',
-  lazy = false,
+  "ellisonleao/gruvbox.nvim",
   priority = 1000,
-
+  lazy = false,
   config = function()
-
-      vim.o.background = 'dark'
-
-      local c = require('vscode.colors').get_colors()
-
-
-      -- Setup the theme
-    require('vscode').setup({
-      transparent = true,
-      italic_comments = true,
-      italic_inlayhints = true,
-      underline_links = true,
-      disable_nvimtree_bg = true,
-      terminal_colors = true,
-
-      color_overrides = {
-        vscLineNumber = '#FFFFFF',
+    -- Default options:
+    require("gruvbox").setup({
+      terminal_colors = true, -- add neovim terminal colors
+      undercurl = true,
+      underline = true,
+      bold = true,
+      italic = {
+        strings = true,
+        emphasis = true,
+        comments = true,
+        operators = false,
+        folds = true,
       },
-
-      group_overrides = {
-        Cursor = {
-          fg = c.vscDarkBlue,
-          bg = c.vscLightGreen,
-          bold = true,
-        },
-      },
+      strikethrough = true,
+      invert_selection = false,
+      invert_signs = false,
+      invert_tabline = false,
+      invert_intend_guides = false,
+      inverse = true, -- invert background for search, diffs, statuslines and errors
+      contrast = "", -- can be "hard", "soft" or empty string
+      palette_overrides = {},
+      overrides = {},
+      dim_inactive = false,
+      transparent_mode = true, -- Set to false if you want the Gruvbox background color
     })
 
-    -- Load colorscheme LAST
-    vim.cmd.colorscheme("vscode")
-
+    -- setup must be called before loading
+    vim.cmd.colorscheme("gruvbox")
   end,
-
 }

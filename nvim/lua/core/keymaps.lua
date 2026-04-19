@@ -1,8 +1,6 @@
 -- Copy to OS clipboard
 vim.keymap.set('n', '<Space>y', '"+y', { desc = 'Copy to system clipboard' })
 vim.keymap.set('v', '<Space>y', '"+y', { desc = 'Copy selected text to system clipboard' })
--- Delete without copying into the register
-vim.keymap.set({ 'n', 'v' }, 'x', '"_x')
 
 -- Set leader key
 vim.g.mapleader = ' '
