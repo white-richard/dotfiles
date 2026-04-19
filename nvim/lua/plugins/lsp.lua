@@ -131,7 +131,13 @@ return {
     -- - settings (table): Override the default settings passed when initializing the server.
     local servers = {
       ts_ls = {},
-      ruff = {},
+      ruff = {
+        init_options = {
+          settings = {
+            configuration = vim.fn.expand '~/.config/ruff/ruff.toml',
+          },
+        },
+      },
       pylsp = {
         settings = {
           pylsp = {
@@ -187,15 +193,17 @@ return {
     })
     require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
-    for server, cfg in pairs(servers) do
-      -- For each LSP server (cfg), we merge:
-      -- 1. A fresh empty table (to avoid mutating capabilities globally)
-      -- 2. Your capabilities object with Neovim + cmp features
-      -- 3. Any server-specific cfg.capabilities if defined in `servers`
-      cfg.capabilities = vim.tbl_deep_extend('force', {}, capabilities, cfg.capabilities or {})
-
-      vim.lsp.config(server, cfg)
-      vim.lsp.enable(server)
-    end
+    require('mason-lspconfig').setup {
+      handlers = {
+        function(server_name)
+          local server = servers[server_name] or {}
+          -- This handles overriding only values explicitly passed
+          -- by the server configuration above. Useful when disabling
+          -- certain features of an LSP (for example, turning off formatting for ts_ls)
+          server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+          require('lspconfig')[server_name].setup(server)
+        end,
+      },
+    }
   end,
 }
