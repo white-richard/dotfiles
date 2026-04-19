@@ -24,16 +24,16 @@
     "tool_permissions": {
       "default": "allow",
     },
-    "default_profile": "write",
+    "default_profile": "ask",
     "inline_assistant_model": {
       "provider": "copilot_chat",
       "model": "oswe-vscode-prime",
     },
     "default_model": {
-      "effort": "high",
-      "enable_thinking": false,
+      "effort": "medium",
+      "enable_thinking": true,
       "provider": "copilot_chat",
-      "model": "gpt-5.2-codex",
+      "model": "gemini-3.1-pro-preview",
     },
     "favorite_models": [],
     "model_parameters": [],
@@ -42,7 +42,13 @@
     {
       "host": "wpeb-server",
       "args": [],
-      "projects": []
+      "projects": [
+        {
+          "paths": [
+            "/home/richw/.code/latent-space"
+          ]
+        }
+      ]
     },
     {
       "host": "home",
@@ -60,21 +66,6 @@
         },
         {
           "paths": [
-            "/home/richiewhite/.code/i2moe/./"
-          ]
-        },
-        {
-          "paths": [
-            "/home/richiewhite/.code/latent-space/./"
-          ]
-        },
-        {
-          "paths": [
-            "/home/richiewhite/.code/repos/paperbanana/./"
-          ]
-        },
-        {
-          "paths": [
             "/home/richiewhite/.code/repos/repo-sense/./"
           ]
         }
@@ -86,17 +77,7 @@
       "projects": [
         {
           "paths": [
-            "/home/richw/.code/asl-llm/./"
-          ]
-        },
-        {
-          "paths": [
             "/home/richw/.code/i2moe/./"
-          ]
-        },
-        {
-          "paths": [
-            "/home/richw/.code/latent-space/./"
           ]
         },
         {
@@ -116,6 +97,11 @@
           ]
         }
       ]
+    },
+    {
+      "host": "wpeb-desk",
+      "args": [],
+      "projects": []
     }
   ],
   "telemetry": {
