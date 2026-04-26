@@ -31,6 +31,8 @@
       "backspace": "project_panel::Trash",
       "delete": "project_panel::Trash",
       "shift delete": "project_panel::Trash",
+      "shift-y": "workspace::CopyRelativePath",
+      "g y": "workspace::CopyPath"
     },
   },
   // -----------------------
