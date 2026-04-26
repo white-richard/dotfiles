@@ -35,7 +35,7 @@
     "tool_permissions": {
       "default": "allow",
     },
-    "default_profile": "ask",
+    "default_profile": "write",
     "inline_assistant_model": {
       "provider": "copilot_chat",
       "model": "oswe-vscode-prime",
@@ -44,7 +44,7 @@
       "effort": "high",
       "enable_thinking": false,
       "provider": "copilot_chat",
-      "model": "gpt-5.4-mini",
+      "model": "gpt-5.2-codex",
     },
     "favorite_models": [],
     "model_parameters": [],
@@ -53,50 +53,57 @@
     {
       "host": "wpeb-server",
       "args": [],
-      "projects": [
-        {
-          "paths": ["/home/richw/.code/latent-space"],
-        },
-      ],
+      "projects": []
     },
     {
       "host": "home",
       "args": [],
       "projects": [
         {
-          "paths": ["/home/richiewhite/.code/atc-slr"],
-        },
-        {
-          "paths": ["/home/richiewhite/.code/repos/repo-sense/./"],
-        },
-      ],
+          "paths": [
+            "/home/richiewhite/.code/atc-slr"
+          ]
+        }
+      ]
     },
     {
       "host": "wpeb-print",
       "args": [],
       "projects": [
         {
-          "paths": ["/home/richw/.code/i2moe/./"],
+          "paths": [
+            "/home/richw/.code/i2moe/./"
+          ]
         },
         {
-          "paths": ["/home/richw/.code/mammoclip/./"],
-        },
-      ],
+          "paths": [
+            "/home/richw/.code/mammoclip/./"
+          ]
+        }
+      ]
     },
     {
       "host": "wpeb-mary",
       "args": [],
       "projects": [
         {
-          "paths": ["/home/richw/.code/asl-llm/./"],
-        },
-      ],
+          "paths": [
+            "/home/richw/.code/asl-llm/./"
+          ]
+        }
+      ]
     },
     {
       "host": "wpeb-desk",
       "args": [],
-      "projects": [],
-    },
+      "projects": [
+        {
+          "paths": [
+            "/home/richw/.code/mammoclip/./"
+          ]
+        }
+      ]
+    }
   ],
   "telemetry": {
     "diagnostics": false,

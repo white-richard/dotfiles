@@ -50,9 +50,6 @@ set -g fish_pager_color_description 555 yellow
 set -g fish_pager_color_prefix cyan
 set -g fish_pager_color_progress cyan
 
-string match -q "$TERM_PROGRAM" "vscode"
-and . (code --locate-shell-integration-path fish)
-
 
 # # begin gd completion
 # gd --completion-fish | source
@@ -63,17 +60,21 @@ set -gx ZVM_INSTALL "$HOME/.zvm/self"
 set -gx PATH $PATH "$HOME/.zvm/bin"
 set -gx PATH $PATH "$ZVM_INSTALL/"
 
-# Vim keybindings
-fish_vi_key_bindings
-
-# Bandaid fix for tailscale on mac
-if test (uname) = "Darwin"
-    alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
-end
-
 set -gx PATH /usr/local/cuda-12.8/bin $PATH
 set -gx LD_LIBRARY_PATH /usr/local/cuda-12.8/lib64 $LD_LIBRARY_PATH
 
 if status is-interactive
     # Commands to run in interactive sessions can go here
+
+    # Vim keybindings
+    fish_vi_key_bindings
+
+    # Bandaid fix for tailscale on mac
+    if test (uname) = "Darwin"
+        alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
+    end
+
+    string match -q "$TERM_PROGRAM" "vscode"
+    and . (code --locate-shell-integration-path fish)
+
 end
