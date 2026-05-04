@@ -42,7 +42,7 @@
     },
     "default_model": {
       "effort": "high",
-      "enable_thinking": false,
+      "enable_thinking": true,
       "provider": "copilot_chat",
       "model": "gpt-5.2-codex",
     },
@@ -53,7 +53,13 @@
     {
       "host": "wpeb-server",
       "args": [],
-      "projects": []
+      "projects": [
+        {
+          "paths": [
+            "/home/richw/.code/asl-llm/./"
+          ]
+        }
+      ]
     },
     {
       "host": "home",
@@ -62,6 +68,11 @@
         {
           "paths": [
             "/home/richiewhite/.code/atc-slr"
+          ]
+        },
+        {
+          "paths": [
+            "/home/richiewhite/.code/repos/paperbanana/./"
           ]
         }
       ]
