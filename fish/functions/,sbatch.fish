@@ -1,5 +1,6 @@
 #!/usr/bin/env fish
 
-set sh_script "~/.dotfiles/job.sh"
-
-sbatch $job_script $argv
+function ,sbatch
+    set job_script "~/.dotfiles/job.sh"
+    sbatch $job_script $argv
+end
