@@ -25,16 +25,17 @@ REPO_NAME=$(basename "$REPO_PATH")
 # COMMIT=$(git -C "$REPO_PATH" rev-parse HEAD)
 WORKTREE_PATH="~/tmp/${REPO_NAME}_${SLURM_JOB_ID}"
 
-if [ -d "$REPO_PATH/.git" ]; then
-    echo "ERROR: Working directory is not a git repository."
-    exit 1
-fi
-
 # ==========================================
 # Setup Environment
 # ==========================================
 
 cd "$REPO_PATH" || exit 1
+
+if [ -d "$REPO_PATH/.git" ]; then
+    echo "ERROR: Working directory is not a git repository."
+    exit 1
+fi
+
 mkdir -p logs
 
 git -C "$REPO_PATH" worktree add "$WORKTREE_PATH" "$COMMIT"
