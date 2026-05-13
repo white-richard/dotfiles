@@ -1,5 +1,12 @@
-function ,tail -d "Tail the most recent .out and .err files in a log directory"
-    # Take the first argument as the directory, default to "logs" if empty
+function ,tail -d "Tail the nth most recent .out and .err files in a log directory"
+    argparse 'n/nth=' -- $argv
+    or return 1
+
+    set -l nth 1
+    if set -q _flag_n
+        set nth $_flag_n
+    end
+
     set -l log_dir $argv[1]
     if test -z "$log_dir"
         set log_dir "logs"
@@ -10,10 +17,9 @@ function ,tail -d "Tail the most recent .out and .err files in a log directory"
         return 1
     end
 
-    # Find the most recent .out and .err files safely
-    # We use ls -t and grep to avoid fish wildcard expansion errors
-    set -l latest_out_file (ls -t $log_dir | grep '\.out$' | head -n 1)
-    set -l latest_err_file (ls -t $log_dir | grep '\.err$' | head -n 1)
+    # Find the nth most recent .out and .err files
+    set -l latest_out_file (ls -t $log_dir | grep '\.out$' | sed -n "$nth"p)
+    set -l latest_err_file (ls -t $log_dir | grep '\.err$' | sed -n "$nth"p)
 
     set -l files_to_tail
 
@@ -33,7 +39,7 @@ function ,tail -d "Tail the most recent .out and .err files in a log directory"
         
         tail -f $files_to_tail
     else
-        echo "No .out or .err files found in $log_dir"
+        echo "Error: Could not find log pair #$nth in $log_dir"
         return 1
     end
 end
