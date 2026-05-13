@@ -19,14 +19,14 @@ export CUDA_VISIBLE_DEVICES=4
 # Parse Command Line Arguments
 # ==========================================
 
-# The first argument passed to the script is the project directory
-# PROJECT_DIR=$1
-# shift
-PROJECT_DIR=$PWD
+REPO_PATH=$PWD
+REPO_NAME=$(basename "$REPO_PATH")
+# Assumed to be made by ,sbatch at submit-time
+# COMMIT=$(git -C "$REPO_PATH" rev-parse HEAD)
+WORKTREE_PATH="~/tmp/${REPO_NAME}_${SLURM_JOB_ID}"
 
-if [ -z "$PROJECT_DIR" ]; then
-    echo "ERROR: No project directory provided."
-    echo "Usage: sbatch job.sh <path_to_project> <python_script.py> [args...]"
+if [ -d "$REPO_PATH/.git" ]; then
+    echo "ERROR: Working directory is not a git repository."
     exit 1
 fi
 
@@ -34,8 +34,10 @@ fi
 # Setup Environment
 # ==========================================
 
-cd "$PROJECT_DIR" || exit 1
+cd "$REPO_PATH" || exit 1
 mkdir -p logs
+
+git -C "$REPO_PATH" worktree add "$WORKTREE_PATH" "$COMMIT"
 
 fish setup.fish
 source .venv/bin/activate
@@ -60,4 +62,6 @@ echo "=========================================="
 echo "Executing: $INTERP $@"
 echo "=========================================="
 
-$INTERP "$@"
+$INTERP "$WORKTREE_PATH/$SCRIPT" "${@:2}"
+
+git -C "$REPO_PATH" worktree remove "$WORKTREE_PATH"
