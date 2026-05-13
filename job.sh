@@ -19,11 +19,12 @@ export CUDA_VISIBLE_DEVICES=4
 # Parse Command Line Arguments
 # ==========================================
 
-REPO_PATH=$PWD
+# Assumed to come from ,sbatch
+# REPO_PATH=$PWD
 REPO_NAME=$(basename "$REPO_PATH")
-# Assumed to be made by ,sbatch at submit-time
+# Assumed to be made by sbatch
 # COMMIT=$(git -C "$REPO_PATH" rev-parse HEAD)
-WORKTREE_PATH="~/tmp/${REPO_NAME}_${SLURM_JOB_ID}"
+WORKTREE_PATH="tmp/${REPO_NAME}_${SLURM_JOB_ID}"
 
 # ==========================================
 # Setup Environment
@@ -31,10 +32,10 @@ WORKTREE_PATH="~/tmp/${REPO_NAME}_${SLURM_JOB_ID}"
 
 cd "$REPO_PATH" || exit 1
 
-if [ -d "$REPO_PATH/.git" ]; then
-    echo "ERROR: Working directory is not a git repository."
-    exit 1
-fi
+# if [ -d "$REPO_PATH/.git" ]; then
+#     echo "ERROR: Working directory is not a git repository."
+#     exit 1
+# fi
 
 mkdir -p logs
 

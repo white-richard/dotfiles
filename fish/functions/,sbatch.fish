@@ -2,6 +2,7 @@
 
 function ,sbatch
     set -l job_script "$HOME/.dotfiles/job.sh"
+    set -x REPO_PATH $PWD
     
     # Capture the commit at submit time and export it
     if set -q GIT_COMMIT
