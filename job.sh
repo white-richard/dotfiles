@@ -20,8 +20,9 @@ export CUDA_VISIBLE_DEVICES=4
 # ==========================================
 
 # The first argument passed to the script is the project directory
-PROJECT_DIR=$1
-shift
+# PROJECT_DIR=$1
+# shift
+PROJECT_DIR=$PWD
 
 if [ -z "$PROJECT_DIR" ]; then
     echo "ERROR: No project directory provided."
