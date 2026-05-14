@@ -49,6 +49,10 @@ done
 
 export CUDA_VISIBLE_DEVICES="$GPU_INDEX"
 
+# Count GPUs in the (possibly comma-separated) list and export for training scripts
+NUM_GPUS=$(echo "$GPU_INDEX" | awk -F',' '{print NF}')
+export NUM_GPUS
+
 # Assumed to come from ,sbatch
 # REPO_PATH=$PWD
 REPO_NAME=$(basename "$REPO_PATH")
