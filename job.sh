@@ -13,11 +13,41 @@
 #SBATCH --mail-user=98299003+white-richard@users.noreply.github.com
 
 export PYTHONUNBUFFERED=1
-export CUDA_VISIBLE_DEVICES=4
 
 # ==========================================
 # Parse Command Line Arguments
 # ==========================================
+
+GPU_INDEX=4
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -g|--gpu)
+            if [ -z "$2" ]; then
+                echo "ERROR: --gpu requires a value"
+                exit 1
+            fi
+            GPU_INDEX="$2"
+            shift 2
+            ;;
+        --gpu=*)
+            GPU_INDEX="${1#*=}"
+            shift
+            ;;
+        --)
+            shift
+            break
+            ;;
+        -*)
+            break
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
+
+export CUDA_VISIBLE_DEVICES="$GPU_INDEX"
 
 # Assumed to come from ,sbatch
 # REPO_PATH=$PWD
@@ -49,6 +79,11 @@ source .venv/bin/activate
 # ==========================================
 
 SCRIPT=$1
+if [ -z "$SCRIPT" ]; then
+    echo "ERROR: Missing script argument"
+    exit 1
+fi
+
 case "${SCRIPT##*.}" in
 py) INTERP="python" ;;
 sh) INTERP="sh" ;;
