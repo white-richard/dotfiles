@@ -27,7 +27,6 @@ wave = "!f() { git add -A; git commit -m \"$1\"; git push; }; f \"$@\""
 
 cowave= "!f() { git add -A; git commit -m \"$1\" -m \"Co-authored-by: $2 <$3>\"; git push; }; f \"$@\""
 
-alex-cowave = "!f() { git add -A; git commit -m \"$1\" -m \"Co-authored-by: alex <alexzorzella@gmail.com>\"; git push; }; f \"$@\""
 
 bait  = "!f() { git checkout -b white-richard/\"$1\"; git push --set-upstream origin white-richard/\"$1\"; }; f \"$@\""
 
