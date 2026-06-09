@@ -39,3 +39,5 @@ setupstream = "!f() { git remote set-url upstream \"$1\"; }; f \"$@\""
 rig = set-origin
 
 whereami = remote -v
+[credential]
+	helper = store

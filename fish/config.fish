@@ -78,3 +78,4 @@ if status is-interactive
     and . (code --locate-shell-integration-path fish)
 
 end
+set -gx CUDA_DEVICE_ORDER PCI_BUS_ID
