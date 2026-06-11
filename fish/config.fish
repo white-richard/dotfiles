@@ -63,6 +63,14 @@ set -gx PATH $PATH "$ZVM_INSTALL/"
 set -gx PATH /usr/local/cuda-12.8/bin $PATH
 set -gx LD_LIBRARY_PATH /usr/local/cuda-12.8/lib64 $LD_LIBRARY_PATH
 
+# Only load Go paths if the hostname is 'ankita'
+if test (hostname) = "ankita"
+    set -gx GOROOT $HOME/.local/go
+    set -gx GOPATH $HOME/go
+    fish_add_path $GOROOT/bin $GOPATH/bin
+end
+set -Ua fish_user_paths (go env GOPATH)/bin
+
 if status is-interactive
     # Commands to run in interactive sessions can go here
 
