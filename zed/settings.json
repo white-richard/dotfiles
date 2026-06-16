@@ -41,9 +41,10 @@
       "model": "oswe-vscode-prime",
     },
     "default_model": {
+      "effort": "high",
       "enable_thinking": true,
       "provider": "copilot_chat",
-      "model": "claude-haiku-4.5",
+      "model": "gpt-5.4-mini",
     },
     "favorite_models": [],
     "model_parameters": [],
@@ -52,47 +53,22 @@
     {
       "host": "wpeb-server",
       "args": [],
-      "projects": [
-        {
-          "paths": ["/home/richw/.code/asl-llm/./"],
-        },
-        {
-          "paths": ["/home/richw/.code/mammoclip/./"],
-        },
-      ],
+      "projects": [],
     },
     {
       "host": "home",
       "args": [],
-      "projects": [
-        {
-          "paths": ["/home/richiewhite/.code/atc-slr"],
-        },
-        {
-          "paths": ["/home/richiewhite/.code/repos/paperbanana/./"],
-        },
-      ],
+      "projects": [],
     },
     {
       "host": "wpeb-print",
       "args": [],
-      "projects": [
-        {
-          "paths": ["/home/richw/.code/i2moe/./"],
-        },
-        {
-          "paths": ["/home/richw/.code/mammoclip/./"],
-        },
-      ],
+      "projects": [],
     },
     {
       "host": "wpeb-mary",
       "args": [],
-      "projects": [
-        {
-          "paths": ["/home/richw/.code/asl-llm/./"],
-        },
-      ],
+      "projects": [],
     },
     {
       "host": "wpeb-desk",
@@ -106,7 +82,17 @@
     {
       "host": "ankita",
       "args": [],
-      "projects": [],
+      "projects": [
+        {
+          "paths": ["/home/richw/.code/lasagna/./"],
+        },
+        {
+          "paths": ["/home/richw/.code/mammoclip/./"],
+        },
+        {
+          "paths": ["/home/richw/.code/superposition/./"],
+        },
+      ],
     },
   ],
   "telemetry": {
@@ -187,6 +173,19 @@
     },
   },
   "lsp": {
+    "harper-ls": {
+      "settings": {
+        "harper-ls": {
+          // Use a specific English dialect
+          "dialect": "American",
+          "linters": {
+            // Disable specific rules
+            // For rule names consult tooltips and https://writewithharper.com/docs/rules
+            "RuleName": false,
+          },
+        },
+      },
+    },
     "texlab": {
       "settings": {
         "texlab": {
@@ -195,6 +194,10 @@
             "onSave": true,
             "executable": "latexmk",
             "args": ["-f", "-pdflua", "-outdir=build"],
+          },
+          "chktex": {
+            "onOpenAndSave": false,
+            "onEdit": false,
           },
         },
       },
