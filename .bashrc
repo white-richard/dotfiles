@@ -49,3 +49,7 @@ if [ "$(hostname)" = "ankita" ]; then
     export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 fi
 export PATH=$PATH:$(go env GOPATH)/bin
+
+
+# Added by Antigravity CLI installer
+export PATH="/home/richw/.local/bin:$PATH"
