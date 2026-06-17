@@ -35,8 +35,10 @@ function ,gpuu --description 'Show which users have processes running on each CU
                 set -l pname $fields[3]
                 set -l mem $fields[4]
                 set -l user (ps -o user= -p $pid 2>/dev/null | string trim)
+                set -l runtime (ps -o etime= -p $pid 2>/dev/null | string trim)
                 test -z "$user"; and set user "?"
-                printf "  %-10s pid=%-8s mem=%6s MiB  cmd=%s\n" $user $pid $mem $pname
+                test -z "$runtime"; and set runtime "?"
+                printf "  %-10s pid=%-8s mem=%6s MiB  time=%-12s cmd=%s\n" $user $pid $mem $runtime $pname
             end
         end
 
