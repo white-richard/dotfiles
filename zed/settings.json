@@ -53,47 +53,60 @@
     {
       "host": "wpeb-server",
       "args": [],
-      "projects": [],
+      "projects": []
     },
     {
       "host": "home",
       "args": [],
-      "projects": [],
+      "projects": []
     },
     {
       "host": "wpeb-print",
       "args": [],
-      "projects": [],
+      "projects": []
     },
     {
       "host": "wpeb-mary",
       "args": [],
-      "projects": [],
+      "projects": []
     },
     {
       "host": "wpeb-desk",
       "args": [],
       "projects": [
         {
-          "paths": ["/home/richw/.code/mammoclip/./"],
+          "paths": [
+            "/home/richw/.code/mammoclip/./"
+          ]
         },
-      ],
+        {
+          "paths": [
+            "/home/richw/.code/nut-ups-cutoff"
+          ]
+        }
+      ]
     },
     {
       "host": "ankita",
       "args": [],
       "projects": [
         {
-          "paths": ["/home/richw/.code/lasagna/./"],
+          "paths": [
+            "/home/richw/.code/lasagna/./"
+          ]
         },
         {
-          "paths": ["/home/richw/.code/mammoclip/./"],
+          "paths": [
+            "/home/richw/.code/mammoclip/./"
+          ]
         },
         {
-          "paths": ["/home/richw/.code/superposition/./"],
-        },
-      ],
-    },
+          "paths": [
+            "/home/richw/.code/superposition/./"
+          ]
+        }
+      ]
+    }
   ],
   "telemetry": {
     "diagnostics": false,
