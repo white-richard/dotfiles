@@ -1,0 +1,7 @@
+{
+  "cssTheme": "Minimal",
+  "translucency": true,
+  "enabledCssSnippets": [
+    "table-scroll"
+  ]
+}

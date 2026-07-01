@@ -14,10 +14,15 @@ set -l remote_cmd "cd ~/.dotfiles && git pull && fish install.fish"
 # Configs to be symlinked
 set APPS fish nvim tmux zed git ruff ghostty
 
-# Machines to distribute to in .env as: SSH_MACHINES="machine1 machine2"
+# Obsidian vaults (mac only) to link customization files into.
 if test -f .env
     set -l machines_string (grep SSH_MACHINES .env | string replace -r '^SSH_MACHINES=["\']?' '' | string replace -r '["\']?$' '')
     set SSH_MACHINES (string split " " $machines_string)
+
+    set -l vaults_string (grep OBSIDIAN_VAULTS .env | string replace -r '^OBSIDIAN_VAULTS=["\']?' '' | string replace -r '["\']?$' '')
+    if test -n "$vaults_string"
+        set OBSIDIAN_VAULTS (string split ":" $vaults_string)
+    end
 end
 # --------------
 
@@ -53,6 +58,37 @@ for app in $APPS
         # Create the symlink
         ln -s "$item" "$target_item"
         echo "Linked: $app/$basename"
+    end
+end
+
+if test (uname) = Darwin; and set -q OBSIDIAN_VAULTS[1]
+    set -l obsidian_source "$DOTFILES_DIR/obsidian"
+
+    for vault in $OBSIDIAN_VAULTS
+        if not test -d "$vault"
+            echo "Skipping missing vault: $vault"
+            continue
+        end
+
+        set -l vault_config "$vault/.obsidian"
+        if not test -d "$vault_config"
+            mkdir -p "$vault_config"
+            echo "Created directory: $vault_config"
+        end
+
+        for item in $obsidian_source/* $obsidian_source/.vimrc
+            set -l basename (basename "$item")
+            set -l target_item "$vault_config/$basename"
+
+            if test -L "$target_item"; and [ (readlink "$target_item") = "$item" ]
+                continue
+            end
+
+            # Remove existing (file or dir) and relink
+            rm -rf "$target_item"
+            ln -s "$item" "$target_item"
+            echo "Linked: obsidian/$basename -> $vault"
+        end
     end
 end
 
