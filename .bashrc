@@ -1,6 +1,4 @@
-#
 # ~/.bashrc
-#
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
@@ -37,12 +35,13 @@ export LD_LIBRARY_PATH=/usr/local/cuda-12.8/lib64:$LD_LIBRARY_PATH
 
 . "$HOME/.local/bin/env"
 
+# NVM
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 export CUDA_DEVICE_ORDER="PCI_BUS_ID"
 
-# Only load Go paths if the hostname is 'ankita'
+# Load Go paths; only if the hostname is 'ankita'
 if [ "$(hostname)" = "ankita" ]; then
     export GOROOT=$HOME/.local/go
     export GOPATH=$HOME/go
@@ -50,6 +49,5 @@ if [ "$(hostname)" = "ankita" ]; then
 fi
 export PATH=$PATH:$(go env GOPATH)/bin
 
-
-# Added by Antigravity CLI installer
+# Antigravity CLI
 export PATH="/home/richw/.local/bin:$PATH"

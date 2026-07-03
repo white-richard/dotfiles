@@ -10,16 +10,16 @@ A collection of configs I've found useful.
 
 This symlinks each config directory into `~/.config/`.
 
-To also push to all SSH machines defined in `.env`:
+## Update Remote Machines
 
-```fish
-./install.fish -d
-```
-
-## Remote machines
-
-Add a `SSH_MACHINES` variable to `.env`:
+To force remote machines to pull and install changes, create a `.env` and define a list of ssh names using the `SSH_MACHINES` variable, e.g.,
 
 ```
 SSH_MACHINES="user@host1 user@host2"
+```
+
+Afterwards, distribute using the `-d` flag:
+
+```fish
+./install.fish -d
 ```
