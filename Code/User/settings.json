@@ -109,6 +109,8 @@
   "vscode-neovim.neovimExecutablePaths.linux": "/usr/bin/nvim",
   "vscode-neovim.neovimExecutablePaths.darwin": "/opt/homebrew/bin/nvim",
   "python.analysis.typeCheckingMode": "off",
+  // Don't auto-activate the selected venv in new integrated terminals
+  "python.terminal.activateEnvironment": false,
   "github.copilot.nextEditSuggestions.enabled": false,
   "zig.zls.enabled": "on",
   "editor.formatOnSave": true,
