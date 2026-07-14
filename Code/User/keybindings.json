@@ -391,5 +391,32 @@
         "key": "cmd+9",
         "command": "workbench.action.terminal.focusAtIndex9",
         "when": "terminalFocus && !terminalEditorFocus"
+    },
+
+    // --- cmd+w in the terminal: kill the focused terminal ---
+    // Panel terminals get killed directly; center/editor terminals close
+    // as tabs (which disposes them). Editor-tab cmd+w stays default.
+    {
+        "key": "cmd+w",
+        "command": "workbench.action.terminal.kill",
+        "when": "terminalFocus && !terminalEditorFocus"
+    },
+    {
+        "key": "cmd+w",
+        "command": "workbench.action.closeActiveEditor",
+        "when": "terminalEditorFocus"
+    },
+
+    // --- cmd+r: open + focus Copilot Chat in the right (secondary) sidebar ---
+    // Mirrors the Zed agent dock on the right. Pressing cmd+r again while
+    // the chat input is focused hides the panel.
+    {
+        "key": "cmd+r",
+        "command": "workbench.panel.chat.view.copilot.focus"
+    },
+    {
+        "key": "cmd+r",
+        "command": "workbench.action.toggleAuxiliaryBar",
+        "when": "chatInputHasFocus"
     }
 ]

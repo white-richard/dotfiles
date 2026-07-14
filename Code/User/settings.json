@@ -91,7 +91,10 @@
     "workbench.action.openEditorAtIndex6",
     "workbench.action.openEditorAtIndex7",
     "workbench.action.openEditorAtIndex8",
-    "workbench.action.openEditorAtIndex9"
+    "workbench.action.openEditorAtIndex9",
+    "workbench.action.terminal.kill",
+    "workbench.action.closeActiveEditor",
+    "workbench.panel.chat.view.copilot.focus"
   ],
   "workbench.startupEditor": "none",
   "diffEditor.ignoreTrimWhitespace": true,
