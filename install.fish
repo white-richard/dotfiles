@@ -12,7 +12,7 @@ set -l remote_cmd "cd ~/.dotfiles && git pull && fish install.fish"
 # --- Config ---
 
 # Configs to be symlinked
-set APPS fish nvim tmux zed git ruff ghostty
+set APPS fish nvim tmux zed git ruff ghostty Code
 
 # Obsidian vaults (mac only) to link customization files into.
 if test -f .env
