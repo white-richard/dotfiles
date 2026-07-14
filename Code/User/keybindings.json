@@ -418,5 +418,21 @@
         "key": "cmd+r",
         "command": "workbench.action.toggleAuxiliaryBar",
         "when": "chatInputHasFocus"
+    },
+
+    // --- Source Control view: keyboard travel ---
+    // cmd+shift+g focuses the commit input; ctrl+j drops from the input
+    // into the changes tree (j/k/h/l work there), ctrl+k climbs back up
+    // to the input. These win over the sidebar-wide ctrl+j -> terminal
+    // rule above because later entries take precedence.
+    {
+        "key": "ctrl+j",
+        "command": "workbench.scm.action.focusNextResourceGroup",
+        "when": "focusedView == 'workbench.scm' && inputFocus"
+    },
+    {
+        "key": "ctrl+k",
+        "command": "workbench.scm.action.focusPreviousInput",
+        "when": "focusedView == 'workbench.scm' && listFocus && !inputFocus"
     }
 ]
