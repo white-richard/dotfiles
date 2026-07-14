@@ -61,6 +61,12 @@ for app in $APPS
     end
 end
 
+if test (uname) = Darwin # MacOS
+    # Disable the press-and-hold popup for VS Code
+    defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
+    echo "Set: VS Code ApplePressAndHoldEnabled = false"
+end
+
 if test (uname) = Darwin; and set -q OBSIDIAN_VAULTS[1]
     set -l obsidian_source "$DOTFILES_DIR/obsidian"
 
