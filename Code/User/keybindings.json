@@ -1,7 +1,395 @@
 // Place your key bindings in this file to override the defaults
+// Ported from ~/.dotfiles/zed/keymap.json (Zed uses base_keymap "VSCode",
+// so VS Code defaults already match Zed's built-ins; entries below cover
+// the custom Zed keymap). Vim-mode contexts rely on the vscode-neovim
+// extension's `neovim.mode` / `neovim.init` context keys.
 [
+    // --- Pre-existing custom bindings ---
     {
         "key": "cmd+s",
         "command": "tinymist.showPdf"
+    },
+
+    // --- Global: vim motions for moving between panes ---
+    // Zed: workspace::ActivatePaneLeft/Right/Up/Down
+    {
+        "key": "ctrl+h",
+        "command": "workbench.action.navigateLeft"
+    },
+    {
+        "key": "ctrl+l",
+        "command": "workbench.action.navigateRight"
+    },
+    {
+        "key": "ctrl+k",
+        "command": "workbench.action.navigateUp"
+    },
+    {
+        "key": "ctrl+j",
+        "command": "workbench.action.navigateDown"
+    },
+    // Zed: cmd-shift-g -> git_panel::ToggleFocus
+    {
+        "key": "cmd+shift+g",
+        "command": "workbench.view.scm"
+    },
+    // Zed: ctrl-shift-c -> project_panel::CollapseAllEntries
+    {
+        "key": "ctrl+shift+c",
+        "command": "workbench.files.action.collapseExplorerFolders"
+    },
+
+    // --- Explorer (Zed ProjectPanel) ---
+    // Zed: backspace/delete/shift-delete -> project_panel::Trash
+    {
+        "key": "backspace",
+        "command": "moveFileToTrash",
+        "when": "explorerViewletVisible && filesExplorerFocus && !explorerResourceReadonly && !inputFocus"
+    },
+    {
+        "key": "delete",
+        "command": "moveFileToTrash",
+        "when": "explorerViewletVisible && filesExplorerFocus && !explorerResourceReadonly && !inputFocus"
+    },
+    {
+        "key": "shift+delete",
+        "command": "moveFileToTrash",
+        "when": "explorerViewletVisible && filesExplorerFocus && !explorerResourceReadonly && !inputFocus"
+    },
+    // Zed: shift-y -> workspace::CopyRelativePath
+    {
+        "key": "shift+y",
+        "command": "copyRelativeFilePath",
+        "when": "filesExplorerFocus && !inputFocus"
+    },
+    // Zed: g y -> workspace::CopyPath
+    {
+        "key": "g y",
+        "command": "copyFilePath",
+        "when": "filesExplorerFocus && !inputFocus"
+    },
+
+    // --- Editor: vim normal mode ---
+    // Zed: space y -> editor::Copy (copy to system clipboard)
+    {
+        "key": "space y",
+        "command": "editor.action.clipboardCopyAction",
+        "when": "editorTextFocus && neovim.init && neovim.mode == normal"
+    },
+    // Zed: space b -> git::Blame
+    {
+        "key": "space b",
+        "command": "gitlens.toggleFileBlame",
+        "when": "editorTextFocus && neovim.init && neovim.mode == normal"
+    },
+    // Zed: shift-k -> editor::Hover (peek at definition)
+    {
+        "key": "shift+k",
+        "command": "editor.action.showHover",
+        "when": "editorTextFocus && neovim.init && neovim.mode == normal"
+    },
+    // Zed: space d -> diagnostics::Deploy (open diagnostics)
+    {
+        "key": "space d",
+        "command": "workbench.actions.view.problems",
+        "when": "editorTextFocus && neovim.init && neovim.mode == normal"
+    },
+    // Zed: space o -> tab_switcher::Toggle
+    {
+        "key": "space o",
+        "command": "workbench.action.showEditorsInActiveGroup",
+        "when": "editorTextFocus && neovim.init && neovim.mode == normal"
+    },
+    // Zed: normal-mode arrows -> vim::ResizePane*
+    {
+        "key": "right",
+        "command": "workbench.action.increaseViewWidth",
+        "when": "editorTextFocus && neovim.init && neovim.mode == normal"
+    },
+    {
+        "key": "left",
+        "command": "workbench.action.decreaseViewWidth",
+        "when": "editorTextFocus && neovim.init && neovim.mode == normal"
+    },
+    {
+        "key": "up",
+        "command": "workbench.action.increaseViewHeight",
+        "when": "editorTextFocus && neovim.init && neovim.mode == normal"
+    },
+    {
+        "key": "down",
+        "command": "workbench.action.decreaseViewHeight",
+        "when": "editorTextFocus && neovim.init && neovim.mode == normal"
+    },
+
+    // --- Editor: vim visual mode ---
+    // Zed: c -> editor::Cut
+    {
+        "key": "c",
+        "command": "editor.action.clipboardCutAction",
+        "when": "editorTextFocus && neovim.init && neovim.mode == visual"
+    },
+    // Zed: shift-j / shift-k -> move selected lines down/up
+    {
+        "key": "shift+j",
+        "command": "editor.action.moveLinesDownAction",
+        "when": "editorTextFocus && neovim.init && neovim.mode == visual"
+    },
+    {
+        "key": "shift+k",
+        "command": "editor.action.moveLinesUpAction",
+        "when": "editorTextFocus && neovim.init && neovim.mode == visual"
+    },
+
+    // --- Editor: any non-insert vim mode ---
+    // Zed: space t -> workspace::NewCenterTerminal
+    {
+        "key": "space t",
+        "command": "workbench.action.createTerminalEditor",
+        "when": "editorTextFocus && neovim.init && neovim.mode != insert"
+    },
+    // Zed: space g d -> editor::GoToDefinition
+    {
+        "key": "space g d",
+        "command": "editor.action.revealDefinition",
+        "when": "editorTextFocus && neovim.init && neovim.mode != insert"
+    },
+    // Zed: space g a -> editor::ToggleCodeActions
+    {
+        "key": "space g a",
+        "command": "editor.action.quickFix",
+        "when": "editorTextFocus && neovim.init && neovim.mode != insert"
+    },
+    // Zed: space w h/j/k/l -> pane::SplitAndMove* (split, moving current tab)
+    {
+        "key": "space w j",
+        "command": "workbench.action.moveEditorToBelowGroup",
+        "when": "editorTextFocus && neovim.init && neovim.mode != insert"
+    },
+    {
+        "key": "space w h",
+        "command": "workbench.action.moveEditorToLeftGroup",
+        "when": "editorTextFocus && neovim.init && neovim.mode != insert"
+    },
+    {
+        "key": "space w l",
+        "command": "workbench.action.moveEditorToRightGroup",
+        "when": "editorTextFocus && neovim.init && neovim.mode != insert"
+    },
+    {
+        "key": "space w k",
+        "command": "workbench.action.moveEditorToAboveGroup",
+        "when": "editorTextFocus && neovim.init && neovim.mode != insert"
+    },
+    // Zed: space n c -> editor::ToggleMinimap
+    {
+        "key": "space n c",
+        "command": "editor.action.toggleMinimap",
+        "when": "editorTextFocus && neovim.init && neovim.mode != insert"
+    },
+
+    // --- Tabs (Zed Pane context): cmd+{n} -> nth tab in current group ---
+    // Overrides the VS Code default of focusing the nth editor *group*.
+    {
+        "key": "cmd+1",
+        "command": "workbench.action.openEditorAtIndex1"
+    },
+    {
+        "key": "cmd+2",
+        "command": "workbench.action.openEditorAtIndex2"
+    },
+    {
+        "key": "cmd+3",
+        "command": "workbench.action.openEditorAtIndex3"
+    },
+    {
+        "key": "cmd+4",
+        "command": "workbench.action.openEditorAtIndex4"
+    },
+    {
+        "key": "cmd+5",
+        "command": "workbench.action.openEditorAtIndex5"
+    },
+    {
+        "key": "cmd+6",
+        "command": "workbench.action.openEditorAtIndex6"
+    },
+    {
+        "key": "cmd+7",
+        "command": "workbench.action.openEditorAtIndex7"
+    },
+    {
+        "key": "cmd+8",
+        "command": "workbench.action.openEditorAtIndex8"
+    },
+    {
+        "key": "cmd+9",
+        "command": "workbench.action.openEditorAtIndex9"
+    },
+
+    // =====================================================================
+    // Beyond the Zed keymap: vim-style, mouse-free coverage for VS Code UI
+    // =====================================================================
+
+    // --- Lists & trees (Explorer, SCM, search results, outline, ...) ---
+    // Matches Zed vim-mode panel navigation. Note: this replaces the
+    // default type-to-search behavior in lists.
+    {
+        "key": "j",
+        "command": "list.focusDown",
+        "when": "listFocus && !inputFocus"
+    },
+    {
+        "key": "k",
+        "command": "list.focusUp",
+        "when": "listFocus && !inputFocus"
+    },
+    {
+        "key": "h",
+        "command": "list.collapse",
+        "when": "listFocus && !inputFocus"
+    },
+    {
+        "key": "l",
+        "command": "list.expand",
+        "when": "listFocus && !inputFocus"
+    },
+    {
+        "key": "g g",
+        "command": "list.focusFirst",
+        "when": "listFocus && !inputFocus"
+    },
+    {
+        "key": "shift+g",
+        "command": "list.focusLast",
+        "when": "listFocus && !inputFocus"
+    },
+
+    // --- cmd+n: context-dependent "new" ---
+    // In the terminal: new terminal tab (panel terminal, or terminal
+    // editor tab when inside a center terminal). Elsewhere the default
+    // cmd+n -> new untitled text file still applies.
+    {
+        "key": "cmd+n",
+        "command": "workbench.action.terminal.new",
+        "when": "terminalFocus"
+    },
+    {
+        "key": "cmd+n",
+        "command": "workbench.action.createTerminalEditor",
+        "when": "terminalFocus && terminalEditorFocus"
+    },
+    // In the Explorer: create a real file at the selected location.
+    {
+        "key": "cmd+n",
+        "command": "explorer.newFile",
+        "when": "filesExplorerFocus && !inputFocus"
+    },
+
+    // --- Quick open / command palette: ctrl+j/k to move selection ---
+    // (Scoped rules below win over the global ctrl+j/k pane navigation.)
+    {
+        "key": "ctrl+j",
+        "command": "workbench.action.quickOpenSelectNext",
+        "when": "inQuickOpen"
+    },
+    {
+        "key": "ctrl+k",
+        "command": "workbench.action.quickOpenSelectPrevious",
+        "when": "inQuickOpen"
+    },
+
+    // --- Autocomplete suggestions: ctrl+j/k to move selection ---
+    {
+        "key": "ctrl+j",
+        "command": "selectNextSuggestion",
+        "when": "suggestWidgetVisible && textInputFocus"
+    },
+    {
+        "key": "ctrl+k",
+        "command": "selectPrevSuggestion",
+        "when": "suggestWidgetVisible && textInputFocus"
+    },
+
+    // --- Code action menu (space g a / cmd+.): ctrl+j/k to move selection ---
+    {
+        "key": "ctrl+j",
+        "command": "selectNextCodeAction",
+        "when": "codeActionMenuVisible"
+    },
+    {
+        "key": "ctrl+k",
+        "command": "selectPrevCodeAction",
+        "when": "codeActionMenuVisible"
+    },
+
+    // --- Explorer: enter opens the file (mac default is rename) ---
+    {
+        "key": "enter",
+        "command": "list.select",
+        "when": "explorerViewletVisible && filesExplorerFocus && !inputFocus"
+    },
+    // Rename moved to r (vim-style), since enter now opens.
+    {
+        "key": "r",
+        "command": "renameFile",
+        "when": "filesExplorerFocus && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
+    },
+
+    // --- ctrl+j from the sidebar jumps straight to the terminal ---
+    // (Overrides navigateDown there, which needed a hop through the editor.)
+    {
+        "key": "ctrl+j",
+        "command": "workbench.action.terminal.focus",
+        "when": "sideBarFocus"
+    },
+
+    // --- cmd+{n} in the panel terminal: switch terminals by index ---
+    // Center/editor terminals are regular tabs, so the openEditorAtIndex
+    // bindings above already handle those; editor focus is untouched too.
+    {
+        "key": "cmd+1",
+        "command": "workbench.action.terminal.focusAtIndex1",
+        "when": "terminalFocus && !terminalEditorFocus"
+    },
+    {
+        "key": "cmd+2",
+        "command": "workbench.action.terminal.focusAtIndex2",
+        "when": "terminalFocus && !terminalEditorFocus"
+    },
+    {
+        "key": "cmd+3",
+        "command": "workbench.action.terminal.focusAtIndex3",
+        "when": "terminalFocus && !terminalEditorFocus"
+    },
+    {
+        "key": "cmd+4",
+        "command": "workbench.action.terminal.focusAtIndex4",
+        "when": "terminalFocus && !terminalEditorFocus"
+    },
+    {
+        "key": "cmd+5",
+        "command": "workbench.action.terminal.focusAtIndex5",
+        "when": "terminalFocus && !terminalEditorFocus"
+    },
+    {
+        "key": "cmd+6",
+        "command": "workbench.action.terminal.focusAtIndex6",
+        "when": "terminalFocus && !terminalEditorFocus"
+    },
+    {
+        "key": "cmd+7",
+        "command": "workbench.action.terminal.focusAtIndex7",
+        "when": "terminalFocus && !terminalEditorFocus"
+    },
+    {
+        "key": "cmd+8",
+        "command": "workbench.action.terminal.focusAtIndex8",
+        "when": "terminalFocus && !terminalEditorFocus"
+    },
+    {
+        "key": "cmd+9",
+        "command": "workbench.action.terminal.focusAtIndex9",
+        "when": "terminalFocus && !terminalEditorFocus"
     }
 ]

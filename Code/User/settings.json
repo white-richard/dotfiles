@@ -65,6 +65,34 @@
     "sml": "cd $dir && sml $fileName"
   },
   "terminal.integrated.inheritEnv": false,
+  // Let ctrl+h/j/k/l pane navigation work from the integrated terminal
+  // (matches Zed's global ActivatePane* bindings). Remove entries here if
+  // you'd rather keep e.g. ctrl+l = clear screen in the shell.
+  "terminal.integrated.commandsToSkipShell": [
+    "workbench.action.navigateLeft",
+    "workbench.action.navigateRight",
+    "workbench.action.navigateUp",
+    "workbench.action.navigateDown",
+    "workbench.action.createTerminalEditor",
+    "workbench.action.terminal.focusAtIndex1",
+    "workbench.action.terminal.focusAtIndex2",
+    "workbench.action.terminal.focusAtIndex3",
+    "workbench.action.terminal.focusAtIndex4",
+    "workbench.action.terminal.focusAtIndex5",
+    "workbench.action.terminal.focusAtIndex6",
+    "workbench.action.terminal.focusAtIndex7",
+    "workbench.action.terminal.focusAtIndex8",
+    "workbench.action.terminal.focusAtIndex9",
+    "workbench.action.openEditorAtIndex1",
+    "workbench.action.openEditorAtIndex2",
+    "workbench.action.openEditorAtIndex3",
+    "workbench.action.openEditorAtIndex4",
+    "workbench.action.openEditorAtIndex5",
+    "workbench.action.openEditorAtIndex6",
+    "workbench.action.openEditorAtIndex7",
+    "workbench.action.openEditorAtIndex8",
+    "workbench.action.openEditorAtIndex9"
+  ],
   "workbench.startupEditor": "none",
   "diffEditor.ignoreTrimWhitespace": true,
   "git.autofetch": true,
@@ -76,6 +104,7 @@
     "asvetliakov.vscode-neovim": 1
   },
   "vscode-neovim.neovimExecutablePaths.linux": "/usr/bin/nvim",
+  "vscode-neovim.neovimExecutablePaths.darwin": "/opt/homebrew/bin/nvim",
   "python.analysis.typeCheckingMode": "off",
   "github.copilot.nextEditSuggestions.enabled": false,
   "zig.zls.enabled": "on",
