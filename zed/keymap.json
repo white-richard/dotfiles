@@ -18,13 +18,13 @@
       "ctrl-shift-c": "project_panel::CollapseAllEntries"
     }
   },
-  // {
-  //   "context": "GitPanel",
-  //   "bindings": {
-  //     "ctrl-shift p": "git::Push",
-  //     "ctrl-shift o": "git::PullRebase",
-  //   },
-  // },
+  {
+    "context": "GitPanel",
+    "bindings": {
+      "ctrl-g": "git::Push",
+      "ctrl-shift-o": "git::PullRebase"
+    }
+  },
   {
     "context": "ProjectPanel",
     "bindings": {
