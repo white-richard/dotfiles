@@ -76,6 +76,7 @@
       "space t": "workspace::NewCenterTerminal", // Open new Terminal
       "space g d": "editor::GoToDefinition",
       "space g a": "editor::ToggleCodeActions",
+      "ctrl-p": ["task::Spawn", { "task_name": "open pdf" }], // Open working PDF
       // Splitting on Current Window
       "space w j": "pane::SplitAndMoveDown",
       "space w h": "pane::SplitAndMoveLeft",
