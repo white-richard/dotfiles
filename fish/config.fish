@@ -91,3 +91,9 @@ set -gx CUDA_DEVICE_ORDER PCI_BUS_ID
 
 # Added by Antigravity CLI installer
 set -gx PATH "/home/richw/.local/bin" $PATH
+
+
+# Added by Antigravity CLI installer
+set -gx PATH "/Users/richiewhite/.local/bin" $PATH
+
+eval "$(/opt/homebrew/bin/brew shellenv fish)"
