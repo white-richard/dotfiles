@@ -117,7 +117,7 @@
 "editor.defaultFormatter": "ms-python.black-formatter",
 "notebook.defaultFormatter": "ms-python.black-formatter",
 "github.copilot.enable": {
-  "*": true,
+  "*": false,
   "plaintext": false,
   "markdown": false,
   "scminput": false

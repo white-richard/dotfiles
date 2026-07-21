@@ -97,6 +97,11 @@
         },
         {
           "paths": [
+            "/home/richw/.code/mammo-cwsa/./"
+          ]
+        },
+        {
+          "paths": [
             "/home/richw/.code/mammoclip/./"
           ]
         }
