@@ -76,6 +76,11 @@
       "projects": [
         {
           "paths": [
+            "/home/richw/.code/conf-wall"
+          ]
+        },
+        {
+          "paths": [
             "/home/richw/.code/mammoclip/./"
           ]
         },
@@ -92,17 +97,17 @@
       "projects": [
         {
           "paths": [
-            "/home/richw/.code/lasagna/./"
-          ]
-        },
-        {
-          "paths": [
-            "/home/richw/.code/mammo-cwsa/./"
+            "/home/richw/.code/i2mammoe"
           ]
         },
         {
           "paths": [
             "/home/richw/.code/mammoclip/./"
+          ]
+        },
+        {
+          "paths": [
+            "/home/richw/.code/tta-mammo/./"
           ]
         }
       ]
