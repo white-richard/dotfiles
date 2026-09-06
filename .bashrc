@@ -52,6 +52,8 @@ export PATH=$PATH:$(go env GOPATH)/bin
 # Antigravity CLI
 export PATH="/home/richw/.local/bin:$PATH"
 
-
 # Added by Antigravity CLI installer
 export PATH="/Users/richiewhite/.local/bin:$PATH"
+
+# Move tmux socket location to ~/.tmux so that it's not dependent on /tmp
+export TMUX_TMPDIR="$HOME/.tmux"
