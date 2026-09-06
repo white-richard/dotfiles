@@ -58,7 +58,13 @@
     {
       "host": "home",
       "args": [],
-      "projects": []
+      "projects": [
+        {
+          "paths": [
+            "/home/richw/.code/open-penny/./"
+          ]
+        }
+      ]
     },
     {
       "host": "wpeb-print",
@@ -97,7 +103,7 @@
       "projects": [
         {
           "paths": [
-            "/home/richw/.code/i2mammoe"
+            "/home/richw/.code/genesis-agent/./"
           ]
         },
         {
