@@ -99,7 +99,7 @@ set -gx PATH "/Users/richiewhite/.local/bin" $PATH
 # fnm as node manager in fishshell
 fnm env --use-on-cd --shell fish | source
 
-# Move tmux socket location to ~/.tmux so that it's not dependent on /tmp 
-set -gx TMUX_TMPDIR "$HOME/.tmux"
+# Move tmux socket location so that it's not dependent on /tmp 
+set -gx TMUX_TMPDIR "$HOME/.cache/tmux"
 
 eval "$(/opt/homebrew/bin/brew shellenv fish)"
