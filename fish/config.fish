@@ -1,4 +1,4 @@
-# Hides fish greeting 
+# Hides fish greeting
 function fish_greeting
 end
 
@@ -34,8 +34,7 @@ set -g pure_git_untracked_dirty false
 # prompt (lucid)
 set -g lucid_prompt_symbol_error_color red
 
-# Status Chars
-#set __fish_git_prompt_char_dirtystate '*'
+# Status chars
 set __fish_git_prompt_char_upstream_equal ''
 set __fish_git_prompt_char_upstream_ahead '↑'
 set __fish_git_prompt_char_upstream_behind '↓'
@@ -51,55 +50,88 @@ set -g fish_pager_color_prefix cyan
 set -g fish_pager_color_progress cyan
 
 
-# # begin gd completion
-# gd --completion-fish | source
-# # end gd completion
+fish_add_path "$HOME/.local/bin"
 
 # ZVM
 set -gx ZVM_INSTALL "$HOME/.zvm/self"
-set -gx PATH $PATH "$HOME/.zvm/bin"
-set -gx PATH $PATH "$ZVM_INSTALL/"
 
-set -gx PATH /usr/local/cuda-12.8/bin $PATH
-set -gx LD_LIBRARY_PATH /usr/local/cuda-12.8/lib64 $LD_LIBRARY_PATH
-
-# Only load Go paths if the hostname is 'ankita'
-if test (hostname) = "ankita"
-    set -gx GOROOT $HOME/.local/go
-    set -gx GOPATH $HOME/go
-    fish_add_path $GOROOT/bin $GOPATH/bin
+if test -d "$HOME/.zvm/bin"
+    fish_add_path "$HOME/.zvm/bin"
 end
-set -Ua fish_user_paths (go env GOPATH)/bin
 
-if status is-interactive
-    # Commands to run in interactive sessions can go here
+if test -d "$ZVM_INSTALL"
+    fish_add_path "$ZVM_INSTALL"
+end
 
-    # Vim keybindings
-    fish_vi_key_bindings
 
-    # Bandaid fix for tailscale on mac
-    if test (uname) = "Darwin"
-        alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
+switch (uname)
+
+    case Darwin
+        # Homebrew
+        if test -x /opt/homebrew/bin/brew
+            eval (/opt/homebrew/bin/brew shellenv)
+        end
+
+        # Tailscale GUI app CLI
+        if test -x /Applications/Tailscale.app/Contents/MacOS/Tailscale
+            alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
+        end
+
+
+    case Linux
+        # CUDA 12.8
+        if test -d /usr/local/cuda-12.8/bin
+            fish_add_path /usr/local/cuda-12.8/bin
+        end
+
+        if test -d /usr/local/cuda-12.8/lib64
+            set -gx LD_LIBRARY_PATH /usr/local/cuda-12.8/lib64 $LD_LIBRARY_PATH
+        end
+end
+
+if test (hostname) = "ankita"
+    set -gx GOROOT "$HOME/.local/go"
+    set -gx GOPATH "$HOME/go"
+
+    if test -d "$GOROOT/bin"
+        fish_add_path "$GOROOT/bin"
     end
 
-    string match -q "$TERM_PROGRAM" "vscode"
-    and . (code --locate-shell-integration-path fish)
-
+    if test -d "$GOPATH/bin"
+        fish_add_path "$GOPATH/bin"
+    end
 end
-set -gx CUDA_DEVICE_ORDER PCI_BUS_ID
+
+# Go binaries
+if command -q go
+    set -l go_path (go env GOPATH 2>/dev/null)
+    if test -n "$go_path"
+        fish_add_path "$go_path/bin"
+    end
+end
 
 
-# Added by Antigravity CLI installer
-set -gx PATH "/home/richw/.local/bin" $PATH
+# Node / fnm
+if command -q fnm
+    fnm env --use-on-cd --shell fish | source
+end
 
 
-# Added by Antigravity CLI installer
-set -gx PATH "/Users/richiewhite/.local/bin" $PATH
-
-# fnm as node manager in fishshell
-fnm env --use-on-cd --shell fish | source
-
-# Move tmux socket location so that it's not dependent on /tmp 
+# Move tmux socket location so that it's not dependent on /tmp
 set -gx TMUX_TMPDIR "$HOME/.cache/tmux"
 
-eval "$(/opt/homebrew/bin/brew shellenv fish)"
+set -gx CUDA_DEVICE_ORDER PCI_BUS_ID
+
+if status is-interactive
+    # Vim
+    fish_vi_key_bindings
+
+    # VS Code shell integration
+    if test "$TERM_PROGRAM" = "vscode"; and command -q code
+        set -l vscode_shell_integration (code --locate-shell-integration-path fish 2>/dev/null)
+
+        if test -n "$vscode_shell_integration"; and test -f "$vscode_shell_integration"
+            source "$vscode_shell_integration"
+        end
+    end
+end
