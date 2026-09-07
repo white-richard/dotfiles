@@ -57,3 +57,5 @@ export PATH="/Users/richiewhite/.local/bin:$PATH"
 
 # Move tmux socket location so that it's not dependent on /tmp
 export TMUX_TMPDIR="$HOME/.cache/tmux"
+mkdir -p "$TMUX_TMPDIR"
+chmod 700 "$TMUX_TMPDIR"

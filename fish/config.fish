@@ -119,6 +119,8 @@ end
 
 # Move tmux socket location so that it's not dependent on /tmp
 set -gx TMUX_TMPDIR "$HOME/.cache/tmux"
+mkdir -p "$TMUX_TMPDIR"
+chmod 700 "$TMUX_TMPDIR"
 
 set -gx CUDA_DEVICE_ORDER PCI_BUS_ID
 
