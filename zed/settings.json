@@ -61,6 +61,11 @@
       "projects": [
         {
           "paths": [
+            "/home/richw/.code/nyx_lang/./"
+          ]
+        },
+        {
+          "paths": [
             "/home/richw/.code/open-penny/./"
           ]
         }

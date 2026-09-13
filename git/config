@@ -8,9 +8,6 @@
   name = white-richard
   email = 98299003+white-richard@users.noreply.github.com
 
-[core]
-    pager = delta
-
 [alias]
 br = branch
 co = checkout
