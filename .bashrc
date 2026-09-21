@@ -64,3 +64,9 @@ export PATH="/Users/richiewhite/.local/bin:$PATH"
 export TMUX_TMPDIR="$HOME/.cache/tmux"
 mkdir -p "$TMUX_TMPDIR"
 chmod 700 "$TMUX_TMPDIR"
+
+# FNM for node
+export PATH="$HOME/.local/share/fnm:$PATH"
+if command -v fnm >/dev/null 2>&1; then
+    eval "$(fnm env --use-on-cd --shell bash)"
+fi
