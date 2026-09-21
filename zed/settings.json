@@ -7,6 +7,7 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "cli_default_open_behavior": "existing_window",
   "project_panel": {
     "dock": "left",
   },
@@ -53,76 +54,63 @@
     {
       "host": "wpeb-server",
       "args": [],
-      "projects": []
+      "projects": [],
     },
     {
       "host": "home",
       "args": [],
       "projects": [
         {
-          "paths": [
-            "/home/richw/.code/nyx_lang/./"
-          ]
+          "paths": ["/home/richw/.code/archive/pasta/./"],
         },
         {
-          "paths": [
-            "/home/richw/.code/open-penny/./"
-          ]
-        }
-      ]
+          "paths": ["/home/richw/.code/nyx_lang/./"],
+        },
+        {
+          "paths": ["/home/richw/.code/open-penny/./"],
+        },
+      ],
     },
     {
       "host": "wpeb-print",
       "args": [],
-      "projects": []
+      "projects": [],
     },
     {
       "host": "wpeb-mary",
       "args": [],
-      "projects": []
+      "projects": [],
     },
     {
       "host": "wpeb-desk",
       "args": [],
       "projects": [
         {
-          "paths": [
-            "/home/richw/.code/conf-wall"
-          ]
+          "paths": ["/home/richw/.code/conf-wall"],
         },
         {
-          "paths": [
-            "/home/richw/.code/mammoclip/./"
-          ]
+          "paths": ["/home/richw/.code/mammoclip/./"],
         },
         {
-          "paths": [
-            "/home/richw/.code/nut-ups-cutoff"
-          ]
-        }
-      ]
+          "paths": ["/home/richw/.code/nut-ups-cutoff"],
+        },
+      ],
     },
     {
       "host": "ankita",
       "args": [],
       "projects": [
         {
-          "paths": [
-            "/home/richw/.code/genesis-agent/./"
-          ]
+          "paths": ["/home/richw/.code/genesis-agent/./"],
         },
         {
-          "paths": [
-            "/home/richw/.code/mammoclip/./"
-          ]
+          "paths": ["/home/richw/.code/mammoclip/./"],
         },
         {
-          "paths": [
-            "/home/richw/.code/tta-mammo/./"
-          ]
-        }
-      ]
-    }
+          "paths": ["/home/richw/.code/tta-mammo/./"],
+        },
+      ],
+    },
   ],
   "telemetry": {
     "diagnostics": false,
@@ -201,6 +189,7 @@
           "arguments": ["--stdin"],
         },
       },
+      "language_servers": ["texpresso-lsp", "texlab", "..."],
     },
     "Markdown": {
       "show_edit_predictions": false,
@@ -247,7 +236,7 @@
           "build": {
             "onSave": true,
             "executable": "latexmk",
-            "args": ["-f", "-pdflua", "-outdir=build"],
+            "args": ["-pdf", "-outdir=build"],
           },
           "chktex": {
             "onOpenAndSave": false,
@@ -264,10 +253,35 @@
         },
       },
     },
+    // "tinymist": {
+    //   "settings": {
+    //     "exportPdf": "onSave",
+    //     "outputPath": "$root/$name",
+    //   },
+    // },
     "tinymist": {
+      "initialization_options": {
+        "preview": {
+          "background": {
+            "enabled": true,
+            "args": [
+              "--data-plane-host=127.0.0.1:23635",
+              // "--invert-colors=auto",
+              "--open",
+            ],
+          },
+        },
+      },
       "settings": {
-        "exportPdf": "onSave",
-        "outputPath": "$root/$name",
+        "formatterMode": "typstyle",
+      },
+    },
+    "texpresso-lsp": {
+      "initialization_options": {
+        "root_tex": "main.tex",
+      },
+      "settings": {
+        "preview_follow_cursor": true,
       },
     },
   },
