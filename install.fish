@@ -61,6 +61,41 @@ for app in $APPS
     end
 end
 
+# Expose the formatter binaries that nvim and Zed share
+set -l MASON_BIN "$HOME/.local/share/nvim/mason/bin"
+set -l LOCAL_BIN "$HOME/.local/bin"
+set -l SHARED_TOOLS shfmt stylua prettier ruff
+
+if test -d "$MASON_BIN"
+    mkdir -p "$LOCAL_BIN"
+
+    for tool in $SHARED_TOOLS
+        set -l src "$MASON_BIN/$tool"
+        set -l dst "$LOCAL_BIN/$tool"
+
+        if not test -x "$src"
+            echo "Skipped: $tool (not installed by Mason)"
+            continue
+        end
+
+        if test -L "$dst"; and [ (readlink "$dst") = "$src" ]
+            continue
+        end
+
+        # Never clobber a real binary someone put here deliberately.
+        if test -e "$dst"; and not test -L "$dst"
+            echo "Skipped: $tool ($dst exists and is not a symlink)"
+            continue
+        end
+
+        rm -f "$dst"
+        ln -s "$src" "$dst"
+        echo "Linked: $tool -> mason"
+    end
+else
+    echo "Skipped: formatter links (no Mason install found)"
+end
+
 if test (uname) = Darwin # MacOS
     # Disable the press-and-hold popup for VS Code
     defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false

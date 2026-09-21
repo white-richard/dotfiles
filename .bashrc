@@ -13,7 +13,7 @@ export PATH="$PATH:$HOME/.zvm/bin"
 export PATH="$PATH:$ZVM_INSTALL/"
 
 # Cargo
-. "$HOME/.cargo/env"
+[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 
 # Local bin
 export PATH="$HOME/.local/bin:$PATH"
@@ -21,7 +21,7 @@ export PATH="$HOME/.local/bin:$PATH"
 export BASH_SILENCE_DEPRECATION_WARNING=1
 
 # Auto-launch fish
-if [[ $- == *i* ]]; then
+if [[ $- == *i* ]] && [ -t 0 ] && [ -t 1 ]; then
     if [ -z "$INSIDE_FISH" ]; then
         parent=$(ps -o comm= -p $PPID 2>/dev/null)
         if [[ "$parent" != *fish* ]]; then
@@ -33,7 +33,7 @@ fi
 export PATH=/usr/local/cuda-12.8/bin:$PATH
 export LD_LIBRARY_PATH=/usr/local/cuda-12.8/lib64:$LD_LIBRARY_PATH
 
-. "$HOME/.local/bin/env"
+[ -f "$HOME/.local/bin/env" ] && . "$HOME/.local/bin/env"
 
 # NVM
 export NVM_DIR="$HOME/.nvm"
