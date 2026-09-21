@@ -1,7 +1,6 @@
 # ruff.toml
 
 line-length = 100
-unsafe-fixes = true
 
 [lint]
 fixable = ["ALL"]
