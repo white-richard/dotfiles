@@ -58,6 +58,9 @@ set -gx ZVM_INSTALL "$HOME/.zvm/self"
 if test -d "$HOME/.zvm/bin"
     fish_add_path "$HOME/.zvm/bin"
 end
+if test (hostname) = "wpeb-436-19l"
+    fish_add_path /usr/local/go/bin
+end
 
 if test -d "$ZVM_INSTALL"
     fish_add_path "$ZVM_INSTALL"

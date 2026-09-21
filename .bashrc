@@ -52,7 +52,9 @@ if [ "$(hostname)" = "ankita" ]; then
     export GPU_5_1=MIG-43688515-87d9-5bf1-97d7-a0c6c2471e19
     export GPU_5_2=MIG-8672e368-8ce8-5ade-8824-5c315cfb7fa7
 fi
-export PATH=$PATH:$(go env GOPATH)/bin
+if [ "$(hostname)" = "wpeb-436-19l" ]; then
+    export PATH=$PATH:/usr/local/go/bin
+fi
 
 # Antigravity CLI
 export PATH="/home/richw/.local/bin:$PATH"
