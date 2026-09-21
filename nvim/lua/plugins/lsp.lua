@@ -135,6 +135,11 @@ return {
         init_options = {
           settings = {
             configuration = vim.fn.expand '~/.config/ruff/ruff.toml',
+            -- Matches zed/settings.json. Without this ruff defaults to
+            -- "editorFirst", which makes the global config above override a
+            -- project's own pyproject.toml/ruff.toml -- the opposite of what
+            -- Zed does, and of what none-ls's ruff CLI calls do.
+            configurationPreference = 'filesystemFirst',
           },
         },
       },
@@ -158,9 +163,25 @@ return {
       html = { filetypes = { 'html', 'twig', 'hbs' } },
       cssls = {},
       tailwindcss = {},
-      dockerls = {},
+      -- Zed has `Dockerfile.format_on_save: "off"`; dockerls advertises
+      -- formatting, so turn it off here too rather than let it format a file
+      -- Zed would leave alone.
+      dockerls = {
+        on_attach = function(client)
+          client.server_capabilities.documentFormattingProvider = false
+          client.server_capabilities.documentRangeFormattingProvider = false
+        end,
+      },
       sqlls = {},
       terraformls = {},
+      -- Typst: Zed formats it with tinymist's built-in typstyle. null-ls has no
+      -- typst source, so the BufWritePre filter in none-ls.lua falls through to
+      -- this server.
+      tinymist = {
+        settings = {
+          formatterMode = 'typstyle',
+        },
+      },
       jsonls = {},
       yamlls = {},
       lua_ls = {

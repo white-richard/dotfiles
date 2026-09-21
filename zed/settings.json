@@ -8,6 +8,29 @@
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
   "cli_default_open_behavior": "existing_window",
+  // Extensions are otherwise untracked by this repo; list them so a fresh
+  // machine ends up with the same language + formatter support.
+  "auto_install_extensions": {
+    "csv": true,
+    "dockerfile": true,
+    "fish": true,
+    "git-firefly": true,
+    "harper": true,
+    "html": true,
+    "latex": true,
+    "log": true,
+    "ltex": true,
+    "lua": true,
+    "make": true,
+    "markdown-oxide": true,
+    "rainbow-csv": true,
+    "svelte": true,
+    "terraform": true,
+    "texpresso": true,
+    "toml": true,
+    "typst": true,
+    "zig": true,
+  },
   "project_panel": {
     "dock": "left",
   },
@@ -130,11 +153,10 @@
   "minimap": {
     "show": "never",
   },
-  "autosave": {
-    "after_delay": {
-      "milliseconds": 500,
-    },
-  },
+  // NOTE: no `autosave`. Zed's autosave saves *without* running `format_on_save`
+  // (zed-industries/zed#16588, #27469, #30077), so an autosave timer means the
+  // buffer is almost always already saved before a format ever runs. Saving
+  // explicitly keeps Zed's behaviour identical to nvim's BufWritePre hook.
   "icon_theme": {
     "mode": "system",
     "light": "Zed (Default)",
@@ -194,6 +216,40 @@
     "Markdown": {
       "show_edit_predictions": false,
     },
+    // The entries below exist to match nvim's none-ls formatters exactly.
+    // Same binary, same arguments, same config file discovery.
+    "Lua": {
+      // lua-language-server advertises documentFormattingProvider and
+      // `Lua.format.enable` defaults to true, so leaving `formatter` unset
+      // would silently format with EmmyLuaCodeStyle instead of stylua.
+      "formatter": {
+        "external": {
+          "command": "stylua",
+          "arguments": ["--search-parent-directories", "--stdin-filepath", "{buffer_path}", "-"],
+        },
+      },
+    },
+    "Shell Script": {
+      "formatter": {
+        "external": {
+          "command": "shfmt",
+          "arguments": ["-i", "4"],
+        },
+      },
+    },
+    "Terraform": {
+      "formatter": {
+        "external": {
+          "command": "terraform",
+          "arguments": ["fmt", "-"],
+        },
+      },
+    },
+    "Dockerfile": {
+      // nvim does not format Dockerfiles; keep docker-language-server from
+      // doing it here.
+      "format_on_save": "off",
+    },
     "TOML": {
       "formatter": "language_server",
       "format_on_save": "off",
@@ -201,6 +257,13 @@
     "Python": {
       "show_edit_predictions": true,
       "language_servers": ["ruff", "!basedpyright", "pylsp"],
+      // Scoped to Python: nvim only runs these as part of its ruff chain.
+      // Globally, this also fired eslint's source.fixAll on JS/TS, which nvim
+      // has no equivalent for.
+      "code_actions_on_format": {
+        "source.organizeImports": true,
+        "source.fixAll": true,
+      },
     },
     "Typst": {
       "formatter": "language_server",
@@ -284,10 +347,6 @@
         "preview_follow_cursor": true,
       },
     },
-  },
-  "code_actions_on_format": {
-    "source.organizeImports": true,
-    "source.fixAll": true,
   },
   // Blurred background
   // "experimental.theme_overrides": {
