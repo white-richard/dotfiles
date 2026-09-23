@@ -1,6 +1,11 @@
-return { "akinsho/toggleterm.nvim", event = "VeryLazy", version = "*",
+-- Bottom terminal toggled by <leader>j / cmd+j (see core/zed.lua)
+return {
+  'akinsho/toggleterm.nvim',
+  cmd = 'ToggleTerm',
+  version = '*',
   opts = {
-    size = 10,
-    open_mapping = "<c-s>",
-  }
+    size = 15,
+    direction = 'horizontal',
+    persist_mode = true,
+  },
 }

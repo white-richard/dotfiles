@@ -107,6 +107,10 @@ return {
       end,
     })
 
+    vim.keymap.set('n', '<leader>I', function()
+      format_buffer(0)
+    end, { desc = 'Format buffer' })
+
     null_ls.setup {
       -- debug = true, -- Enable debug mode. Inspect logs with :NullLsLog.
       sources = sources,

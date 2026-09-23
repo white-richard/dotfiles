@@ -1,3 +1,20 @@
+local function copy_path(state, modifier)
+  local path = vim.fn.fnamemodify(state.tree:get_node():get_id(), modifier)
+  vim.fn.setreg('+', path)
+  vim.notify('Copied ' .. path)
+end
+
+local function git_run(args, notify)
+  vim.system(vim.list_extend({ 'git' }, args), { text = true }, function(res)
+    vim.schedule(function()
+      if notify or res.code ~= 0 then
+        vim.notify(vim.trim(res.stdout .. res.stderr), res.code == 0 and vim.log.levels.INFO or vim.log.levels.ERROR)
+      end
+      require('neo-tree.events').fire_event 'git_event'
+    end)
+  end)
+end
+
 return {
   'nvim-neo-tree/neo-tree.nvim',
   branch = 'v3.x',
@@ -28,6 +45,8 @@ return {
   },
   config = function()
     require('neo-tree').setup {
+      sources = { 'filesystem', 'git_status', 'document_symbols' },
+      default_source = 'last', -- <leader>b reopens whichever panel was last used
       close_if_last_window = false, -- Close Neo-tree if it is the last window left in the tab
       popup_border_style = 'rounded',
       enable_git_status = true,
@@ -118,7 +137,55 @@ return {
       -- A list of functions, each representing a global custom command
       -- that will be available in all sources (if not overridden in `opts[source_name].commands`)
       -- see `:h neo-tree-custom-commands-global`
-      commands = {},
+      commands = {
+        copy_relative_path = function(state)
+          copy_path(state, ':.')
+        end,
+        copy_absolute_path = function(state)
+          copy_path(state, ':p')
+        end,
+        focus_parent = function(state)
+          local parent = state.tree:get_node():get_parent_id()
+          if parent then
+            require('neo-tree.ui.renderer').focus_node(state, parent)
+          end
+        end,
+        focus_editor = function()
+          vim.cmd.wincmd 'p'
+        end,
+        -- Zed's project_panel::Open: open the file but stay in the panel
+        open_keep_focus = function(state)
+          local node = state.tree:get_node()
+          state.commands.open(state)
+          if node.type == 'file' then
+            vim.cmd.wincmd 'p'
+            vim.schedule(function()
+              require('neo-tree.ui.renderer').focus_node(state, node:get_id())
+            end)
+          end
+        end,
+        system_open = function(state)
+          vim.ui.open(state.tree:get_node():get_id())
+        end,
+        grep_in_dir = function(state)
+          local node = state.tree:get_node()
+          local dir = node.type == 'directory' and node:get_id() or vim.fn.fnamemodify(node:get_id(), ':h')
+          require('telescope.builtin').live_grep { search_dirs = { dir }, prompt_title = 'Search in ' .. vim.fn.fnamemodify(dir, ':.') }
+        end,
+        git_open_diff = function(state)
+          local node = state.tree:get_node()
+          state.commands.open(state)
+          if node.type == 'file' then
+            vim.cmd 'Gvdiffsplit'
+          end
+        end,
+        git_unstage_all = function()
+          git_run { 'reset', '--quiet' }
+        end,
+        git_pull_rebase = function()
+          git_run({ 'pull', '--rebase' }, true)
+        end,
+      },
       window = {
         position = 'left',
         width = 40,
@@ -127,52 +194,26 @@ return {
           nowait = true,
         },
         mappings = {
-          ['<space>'] = {
-            'toggle_node',
-            nowait = false, -- disable `nowait` if you have existing combos starting with this char that you want to use
-          },
+          ['<space>'] = 'none', -- space is the leader in panels, as in Zed
+          ['<tab>'] = 'open_keep_focus',
           ['<2-LeftMouse>'] = 'open',
           ['<cr>'] = 'open',
-          ['<esc>'] = 'cancel', -- close preview or floating neo-tree window
+          ['t'] = 'open',
+          ['<esc>'] = 'focus_editor',
           ['P'] = { 'toggle_preview', config = { use_float = true } },
+          ['h'] = 'close_node',
           ['l'] = 'open',
-          ['S'] = 'open_split',
-          ['s'] = 'open_vsplit',
-          -- ["S"] = "split_with_window_picker",
-          -- ["s"] = "vsplit_with_window_picker",
-          ['t'] = 'open_tabnew',
-          -- ["<cr>"] = "open_drop",
-          -- ["t"] = "open_tab_drop",
-          ['w'] = 'open_with_window_picker',
-          --["P"] = "toggle_preview", -- enter preview mode, which shows the current node without focusing
-          ['C'] = 'close_node',
-          -- ['C'] = 'close_all_subnodes',
+          ['<left>'] = 'close_node',
+          ['<right>'] = 'open',
+          ['v'] = 'open_vsplit',
+          ['o'] = 'open_split',
+          ['-'] = 'focus_parent',
           ['z'] = 'close_all_nodes',
-          --["Z"] = "expand_all_nodes",
-          ['a'] = {
-            'add',
-            -- this command supports BASH style brace expansion ("x{a,b,c}" -> xa,xb,xc). see `:h neo-tree-file-actions` for details
-            -- some commands may take optional config options, see `:h neo-tree-mappings` for details
-            config = {
-              show_path = 'none', -- "none", "relative", "absolute"
-            },
-          },
-          ['A'] = 'add_directory', -- also accepts the optional config.show_path option like "add". this also supports BASH style brace expansion.
-          ['d'] = 'delete',
-          ['r'] = 'rename',
-          ['y'] = 'copy_to_clipboard',
-          ['x'] = 'cut_to_clipboard',
-          ['p'] = 'paste_from_clipboard',
-          ['c'] = 'copy', -- takes text input for destination, also accepts the optional config.show_path option like "add":
-          -- ["c"] = {
-          --  "copy",
-          --  config = {
-          --    show_path = "none" -- "none", "relative", "absolute"
-          --  }
-          --}
-          ['m'] = 'move', -- takes text input for destination, also accepts the optional config.show_path option like "add".
+          ['<C-S-c>'] = 'close_all_nodes',
+          ['Y'] = 'copy_relative_path',
+          ['gy'] = 'copy_absolute_path',
           ['q'] = 'close_window',
-          ['R'] = 'refresh',
+          ['<C-r>'] = 'refresh',
           ['?'] = 'show_help',
           ['<'] = 'prev_source',
           ['>'] = 'next_source',
@@ -226,26 +267,49 @@ return {
         -- instead of relying on nvim autocmd events.
         window = {
           mappings = {
-            ['<bs>'] = 'navigate_up',
+            -- Zed ProjectPanel (vim mode) + zed/keymap.json
+            ['%'] = { 'add', config = { show_path = 'none' } },
+            ['a'] = { 'add', config = { show_path = 'none' } },
+            ['d'] = 'add_directory',
+            ['A'] = 'add_directory',
+            ['D'] = 'delete',
+            ['R'] = 'rename',
+            ['r'] = 'rename',
+            ['<bs>'] = 'trash',
+            ['<del>'] = 'trash',
+            ['<S-del>'] = 'trash',
+            [']c'] = 'next_git_modified',
+            ['[c'] = 'prev_git_modified',
+            ['/'] = 'grep_in_dir',
+            ['s'] = 'system_open',
+            -- Extras (Zed uses cmd-c/x/v, which Ghostty owns)
+            ['y'] = 'copy_to_clipboard',
+            ['x'] = 'cut_to_clipboard',
+            ['p'] = 'paste_from_clipboard',
+            ['c'] = 'copy',
+            ['m'] = 'move',
             ['.'] = 'set_root',
             ['H'] = 'toggle_hidden',
-            ['/'] = 'fuzzy_finder',
-            ['D'] = 'fuzzy_finder_directory',
-            ['#'] = 'fuzzy_sorter', -- fuzzy sorting using the fzy algorithm
-            -- ["D"] = "fuzzy_sorter_directory",
             ['f'] = 'filter_on_submit',
+            ['#'] = 'fuzzy_sorter',
             ['<c-x>'] = 'clear_filter',
-            ['[g'] = 'prev_git_modified',
-            [']g'] = 'next_git_modified',
-            ['o'] = { 'show_help', nowait = false, config = { title = 'Order by', prefix_key = 'o' } },
-            ['oc'] = { 'order_by_created', nowait = false },
-            ['od'] = { 'order_by_diagnostics', nowait = false },
-            ['og'] = { 'order_by_git_status', nowait = false },
-            ['om'] = { 'order_by_modified', nowait = false },
-            ['on'] = { 'order_by_name', nowait = false },
-            ['os'] = { 'order_by_size', nowait = false },
-            ['ot'] = { 'order_by_type', nowait = false },
-            ['P'] = { 'toggle_preview', config = { use_float = true } }, -- Toggle view Images (images.nvim)
+            ['O'] = { 'show_help', nowait = false, config = { title = 'Order by', prefix_key = 'O' } },
+            ['Oc'] = { 'order_by_created', nowait = false },
+            ['Od'] = { 'order_by_diagnostics', nowait = false },
+            ['Og'] = { 'order_by_git_status', nowait = false },
+            ['Om'] = { 'order_by_modified', nowait = false },
+            ['On'] = { 'order_by_name', nowait = false },
+            ['Os'] = { 'order_by_size', nowait = false },
+            ['Ot'] = { 'order_by_type', nowait = false },
+            -- Shadow neo-tree's source defaults so the global maps above apply
+            ['o'] = 'open_split',
+            ['oc'] = 'none',
+            ['od'] = 'none',
+            ['og'] = 'none',
+            ['om'] = 'none',
+            ['on'] = 'none',
+            ['os'] = 'none',
+            ['ot'] = 'none',
           },
           fuzzy_finder_mappings = { -- define keymaps for filter popup window in fuzzy_finder_mode
             ['<down>'] = 'move_cursor_down',
@@ -282,29 +346,47 @@ return {
       },
       git_status = {
         window = {
-          position = 'float',
           mappings = {
-            ['A'] = 'git_add_all',
-            ['gu'] = 'git_unstage_file',
+            -- Zed GitPanel (vim mode) + zed/keymap.json
+            ['x'] = 'git_toggle_file_stage',
+            ['X'] = 'git_add_all',
+            ['U'] = 'git_unstage_all',
+            ['<bs>'] = 'git_revert_file',
+            ['<del>'] = 'git_revert_file',
+            ['<cr>'] = 'git_open_diff',
+            ['gf'] = 'git_open_diff',
+            ['i'] = 'git_commit',
+            ['<C-g>'] = 'git_push',
+            ['<C-S-o>'] = 'git_pull_rebase',
             ['ga'] = 'git_add_file',
+            ['gu'] = 'git_unstage_file',
             ['gr'] = 'git_revert_file',
             ['gc'] = 'git_commit',
             ['gp'] = 'git_push',
-            ['gg'] = 'git_commit_and_push',
-            ['o'] = { 'show_help', nowait = false, config = { title = 'Order by', prefix_key = 'o' } },
-            ['oc'] = { 'order_by_created', nowait = false },
-            ['od'] = { 'order_by_diagnostics', nowait = false },
-            ['om'] = { 'order_by_modified', nowait = false },
-            ['on'] = { 'order_by_name', nowait = false },
-            ['os'] = { 'order_by_size', nowait = false },
-            ['ot'] = { 'order_by_type', nowait = false },
+            ['gg'] = 'none', -- default is commit_and_push; gg means top in Zed
+            ['A'] = 'none',
+            ['o'] = 'open_split',
+            ['oc'] = 'none',
+            ['od'] = 'none',
+            ['om'] = 'none',
+            ['on'] = 'none',
+            ['os'] = 'none',
+            ['ot'] = 'none',
+          },
+        },
+      },
+      document_symbols = {
+        window = {
+          mappings = {
+            ['<cr>'] = 'jump_to_symbol',
+            ['l'] = 'toggle_node',
+            ['h'] = 'close_node',
           },
         },
       },
     }
 
     vim.cmd [[nnoremap \ :Neotree reveal<cr>]]
-    vim.keymap.set('n', '<leader>e', ':Neotree toggle position=left<CR>', { noremap = true, silent = true }) -- focus file explorer
-    vim.keymap.set('n', '<leader>ngs', ':Neotree float git_status<CR>', { noremap = true, silent = true }) -- open git status window
+    vim.keymap.set('n', '<leader>ngs', ':Neotree focus git_status position=left<CR>', { noremap = true, silent = true }) -- open git status window
   end,
 }

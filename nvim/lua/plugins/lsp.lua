@@ -46,7 +46,7 @@ return {
         map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
 
         -- Find references for the word under your cursor.
-        map('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
+        map('grr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
 
         -- Jump to the implementation of the word under your cursor.
         --  Useful when your language has ways of declaring types without an actual implementation.
@@ -76,6 +76,23 @@ return {
         -- WARN: This is not Goto Definition, this is Goto Declaration.
         --  For example, in C this would take you to the header.
         map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+
+        -- Zed vim-mode equivalents
+        local builtin = require 'telescope.builtin'
+        map('gA', builtin.lsp_references, 'All references')
+        map('gh', vim.lsp.buf.hover, 'Hover')
+        map('gy', builtin.lsp_type_definitions, 'Type definition')
+        map('g.', vim.lsp.buf.code_action, 'Code action', { 'n', 'x' })
+        map('gs', builtin.lsp_document_symbols, 'Outline')
+        map('gO', builtin.lsp_document_symbols, 'Outline')
+        map('gS', builtin.lsp_dynamic_workspace_symbols, 'Project symbols')
+        map('cd', vim.lsp.buf.rename, 'Rename')
+        map('<leader>.', vim.lsp.buf.code_action, 'Code action', { 'n', 'x' })
+        map('<leader>O', builtin.lsp_document_symbols, 'Outline')
+        map('<leader>gd', builtin.lsp_definitions, 'Go to definition')
+        map('<leader>ga', vim.lsp.buf.code_action, 'Code action', { 'n', 'x' })
+        map('<F12>', builtin.lsp_definitions, 'Go to definition')
+        map('<S-F12>', builtin.lsp_implementations, 'Go to implementation')
 
         -- The following two autocommands are used to highlight references of the
         -- word under your cursor when your cursor rests there for a little while.
@@ -108,7 +125,7 @@ return {
         -- The following code creates a keymap to toggle inlay hints in your
         -- code, if the language server you are using supports them
         if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
-          map('<leader>th', function()
+          map('<leader>ih', function()
             vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
           end, '[T]oggle Inlay [H]ints')
         end

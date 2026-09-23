@@ -8,7 +8,7 @@ return {
         -- Global Minimap Controls
         { "<leader>nm", "<cmd>Neominimap Toggle<cr>", desc = "Toggle global minimap" },
         { "<leader>no", "<cmd>Neominimap Enable<cr>", desc = "Enable global minimap" },
-        { "<leader>nc", "<cmd>Neominimap Disable<cr>", desc = "Disable global minimap" },
+        { "<leader>nc", "<cmd>Neominimap Toggle<cr>", desc = "Toggle global minimap" },
         { "<leader>nr", "<cmd>Neominimap Refresh<cr>", desc = "Refresh global minimap" },
 
         -- Window-Specific Minimap Controls
@@ -58,7 +58,20 @@ return {
             render = {
                 wrap = true,
             },
+            -- No minimap in the git panel's views (diffs, fugitive, blame)
+            exclude_filetypes = { "help", "bigfile", "fugitive", "git", "gitcommit", "gitsigns-blame" },
+            win_filter = function(winid)
+                return not vim.wo[winid].diff
+            end,
         }
+
+        -- Gvdiffsplit sets 'diff' after the window exists, so re-check then
+        vim.api.nvim_create_autocmd("OptionSet", {
+            pattern = "diff",
+            callback = function()
+                require("neominimap.api").win.refresh(vim.api.nvim_tabpage_list_wins(0))
+            end,
+        })
     end,
 }
 

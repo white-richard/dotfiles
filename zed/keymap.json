@@ -52,9 +52,66 @@
   {
     "context": "Editor && VimControl && !VimWaiting && !menu",
     "bindings": {
-      "space b": "git::Blame",
       "shift-k": "editor::Hover", // Peek at definition
-      "space d": "diagnostics::Deploy" // Open Diagnostics
+      "space d": "diagnostics::Deploy", // Open Diagnostics
+      // Shared with nvim (nvim/lua/core/zed.lua)
+      "space .": "editor::ToggleCodeActions",
+      "space shift-i": "editor::Format",
+      "space ;": "editor::ToggleLineNumbers",
+      "space '": "editor::ToggleSelectedDiffHunks",
+      "space \\": "pane::SplitRight",
+      "space shift-o": "outline::Toggle",
+      "space 1": ["pane::ActivateItem", 0],
+      "space 2": ["pane::ActivateItem", 1],
+      "space 3": ["pane::ActivateItem", 2],
+      "space 4": ["pane::ActivateItem", 3],
+      "space 5": ["pane::ActivateItem", 4],
+      "space 6": ["pane::ActivateItem", 5],
+      "space 7": ["pane::ActivateItem", 6],
+      "space 8": ["pane::ActivateItem", 7],
+      "space 9": ["pane::ActivateItem", 8]
+    }
+  },
+  {
+    // Space versions of cmd docks/pickers, shared with nvim; also work inside panels
+    "context": "(Editor && VimControl && !VimWaiting && !menu) || (ProjectPanel && not_editing) || (GitPanel && ChangesList) || (OutlinePanel && not_editing)",
+    "bindings": {
+      "space j": "workspace::ToggleBottomDock",
+      "space b": "workspace::ToggleLeftDock",
+      "space shift-e": "project_panel::ToggleFocus",
+      "space shift-g": "git_panel::ToggleFocus",
+      "space shift-b": "outline_panel::ToggleFocus",
+      "space p": "file_finder::Toggle",
+      "space shift-f": "pane::DeploySearch",
+      "space shift-h": ["pane::DeploySearch", { "replace_enabled": true }]
+    }
+  },
+  {
+    // Free space as a leader in panels; open-without-focus moves to tab
+    "context": "ProjectPanel && not_editing",
+    "bindings": {
+      "space": null,
+      "tab": "project_panel::Open"
+    }
+  },
+  {
+    "context": "GitPanel && ChangesList",
+    "bindings": {
+      "space": null
+    }
+  },
+  {
+    "context": "OutlinePanel && not_editing",
+    "bindings": {
+      "space": null
+    }
+  },
+  {
+    // Forward editor-local cmd keys to nvim running in the terminal
+    "context": "Terminal",
+    "bindings": {
+      "cmd-s": ["terminal::SendText", "\u001b[115;9u"],
+      "cmd-/": ["terminal::SendText", "\u001b[47;9u"]
     }
   },
   {
@@ -76,6 +133,7 @@
       "space t": "workspace::NewCenterTerminal", // Open new Terminal
       "space g d": "editor::GoToDefinition",
       "space g a": "editor::ToggleCodeActions",
+      "space g b": "git::Blame",
       "ctrl-p": ["task::Spawn", { "task_name": "open pdf" }], // Open working PDF
       // Splitting on Current Window
       "space w j": "pane::SplitAndMoveDown",

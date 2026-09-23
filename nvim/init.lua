@@ -33,7 +33,11 @@ require('lazy').setup {
   require 'plugins.interestingwords',
   require 'plugins.minimap',
   require 'plugins.image',
+  require 'plugins.trouble',
+  require 'plugins.grug-far',
 }
+
+require 'core.zed' -- Zed-mirroring keymaps
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
