@@ -134,6 +134,9 @@
       "space g d": "editor::GoToDefinition",
       "space g a": "editor::ToggleCodeActions",
       "space g b": "git::Blame",
+      "space g s": "git::ToggleStaged",
+      "space g r": "git::Restore",
+      "space g shift-d": "git::Diff",
       "ctrl-p": ["task::Spawn", { "task_name": "open pdf" }], // Open working PDF
       // Splitting on Current Window
       "space w j": "pane::SplitAndMoveDown",

@@ -15,6 +15,26 @@ local function git_run(args, notify)
   end)
 end
 
+-- Gitsigns review tab (unified diff, hunk keys work inside); replaces any open one
+local function open_review(paths)
+  for _, tab in ipairs(vim.api.nvim_list_tabpages()) do
+    for _, win in ipairs(vim.api.nvim_tabpage_list_wins(tab)) do
+      if #vim.api.nvim_list_tabpages() > 1 and vim.bo[vim.api.nvim_win_get_buf(win)].filetype == 'gitsigns-diff' then
+        vim.cmd.tabclose(vim.api.nvim_tabpage_get_number(tab))
+        break
+      end
+    end
+  end
+  require('gitsigns').diff(nil, paths, { diff = 'unified' }, function()
+    vim.schedule(function()
+      -- land in the diff at its first change (already-open buffers keep their cursor)
+      vim.cmd.wincmd 'l'
+      vim.api.nvim_win_set_cursor(0, { vim.api.nvim_buf_line_count(0), 0 })
+      require('gitsigns').nav_hunk('next', { wrap = true, target = 'all', navigation_message = false })
+    end)
+  end)
+end
+
 return {
   'nvim-neo-tree/neo-tree.nvim',
   branch = 'v3.x',
@@ -138,6 +158,11 @@ return {
       -- that will be available in all sources (if not overridden in `opts[source_name].commands`)
       -- see `:h neo-tree-custom-commands-global`
       commands = {
+        -- Name to the system clipboard, and mark the file so p pastes it
+        copy_filename = function(state)
+          copy_path(state, ':t')
+          state.commands.copy_to_clipboard(state)
+        end,
         copy_relative_path = function(state)
           copy_path(state, ':.')
         end,
@@ -172,12 +197,17 @@ return {
           local dir = node.type == 'directory' and node:get_id() or vim.fn.fnamemodify(node:get_id(), ':h')
           require('telescope.builtin').live_grep { search_dirs = { dir }, prompt_title = 'Search in ' .. vim.fn.fnamemodify(dir, ':.') }
         end,
-        git_open_diff = function(state)
+        -- Zed's git panel opens the project diff at that file; this is the inline (unified) diff
+        git_open_file = function(state)
           local node = state.tree:get_node()
-          state.commands.open(state)
-          if node.type == 'file' then
-            vim.cmd 'Gvdiffsplit'
+          if node.type ~= 'file' then
+            return state.commands.toggle_node(state)
           end
+          open_review { vim.fn.fnamemodify(node:get_id(), ':.') }
+        end,
+        -- Zed's project diff: every changed file
+        git_review = function()
+          open_review()
         end,
         git_unstage_all = function()
           git_run { 'reset', '--quiet' }
@@ -210,6 +240,7 @@ return {
           ['-'] = 'focus_parent',
           ['z'] = 'close_all_nodes',
           ['<C-S-c>'] = 'close_all_nodes',
+          ['y'] = 'copy_filename',
           ['Y'] = 'copy_relative_path',
           ['gy'] = 'copy_absolute_path',
           ['q'] = 'close_window',
@@ -283,7 +314,6 @@ return {
             ['/'] = 'grep_in_dir',
             ['s'] = 'system_open',
             -- Extras (Zed uses cmd-c/x/v, which Ghostty owns)
-            ['y'] = 'copy_to_clipboard',
             ['x'] = 'cut_to_clipboard',
             ['p'] = 'paste_from_clipboard',
             ['c'] = 'copy',
@@ -353,8 +383,9 @@ return {
             ['U'] = 'git_unstage_all',
             ['<bs>'] = 'git_revert_file',
             ['<del>'] = 'git_revert_file',
-            ['<cr>'] = 'git_open_diff',
-            ['gf'] = 'git_open_diff',
+            ['<cr>'] = 'git_open_file',
+            ['gf'] = 'git_open_file',
+            ['d'] = 'git_review', -- neo-tree's default here deletes the file
             ['i'] = 'git_commit',
             ['<C-g>'] = 'git_push',
             ['<C-S-o>'] = 'git_pull_rebase',

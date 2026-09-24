@@ -35,7 +35,7 @@ return {
         { "<leader>ns", "<cmd>Neominimap ToggleFocus<cr>", desc = "Switch focus on minimap" },
     },
     init = function()
-        -- The following options are recommended when layout == "float"
+        -- Soft-wrap settings; the split layout below makes text wrap before the minimap
         vim.opt.wrapmargin = 45
         vim.opt.wrap = true
         vim.opt.sidescrolloff = 0 -- Set a large value
@@ -49,11 +49,12 @@ return {
         ---@type Neominimap.UserConfig
         vim.g.neominimap = {
             auto_enable = true,
-            layout = "float",
-            float = { 
+            -- A real window, not a float, so text wraps before it instead of under it
+            layout = "split",
+            split = {
                 minimap_width = 12,
-                window_border = vim.fn.has("nvim-0.11") == 2 and vim.opt.winborder:get() or "rounded",
-                margin = { right = 1, top = 0, bottom = 0 },
+                fix_width = true,
+                close_if_last_window = true,
             },
             render = {
                 wrap = true,
@@ -61,15 +62,29 @@ return {
             -- No minimap in the git panel's views (diffs, fugitive, blame)
             exclude_filetypes = { "help", "bigfile", "fugitive", "git", "gitcommit", "gitsigns-blame" },
             win_filter = function(winid)
-                return not vim.wo[winid].diff
+                if vim.wo[winid].diff then
+                    return false
+                end
+                return true
+            end,
+            -- Split minimaps are per tab, so hide it for tabs showing a diff or the review
+            tab_filter = function(tabid)
+                for _, w in ipairs(vim.api.nvim_tabpage_list_wins(tabid)) do
+                    if vim.wo[w].diff or vim.bo[vim.api.nvim_win_get_buf(w)].filetype == "gitsigns-diff" then
+                        return false
+                    end
+                end
+                return true
             end,
         }
 
-        -- Gvdiffsplit sets 'diff' after the window exists, so re-check then
-        vim.api.nvim_create_autocmd("OptionSet", {
-            pattern = "diff",
+        -- 'diff' and the review panel appear after their windows exist, so re-check then
+        vim.api.nvim_create_autocmd({ "OptionSet", "FileType" }, {
+            pattern = { "diff", "gitsigns-diff" },
             callback = function()
-                require("neominimap.api").win.refresh(vim.api.nvim_tabpage_list_wins(0))
+                local api = require("neominimap.api")
+                api.tab.refresh({ vim.api.nvim_get_current_tabpage() })
+                api.win.refresh(vim.api.nvim_tabpage_list_wins(0))
             end,
         })
     end,
