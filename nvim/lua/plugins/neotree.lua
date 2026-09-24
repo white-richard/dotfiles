@@ -225,7 +225,7 @@ return {
         },
         mappings = {
           ['<space>'] = 'none', -- space is the leader in panels, as in Zed
-          ['<tab>'] = 'open_keep_focus',
+          ['<Tab>'] = 'open_keep_focus',
           ['<2-LeftMouse>'] = 'open',
           ['<cr>'] = 'open',
           ['t'] = 'open',
