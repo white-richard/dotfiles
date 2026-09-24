@@ -58,6 +58,7 @@ set -gx ZVM_INSTALL "$HOME/.zvm/self"
 if test -d "$HOME/.zvm/bin"
     fish_add_path "$HOME/.zvm/bin"
 end
+
 if test (hostname) = "wpeb-436-19l"
     fish_add_path /usr/local/go/bin
 end
@@ -104,10 +105,11 @@ if test (hostname) = "ankita"
         fish_add_path "$GOPATH/bin"
     end
 
-    set -gx GPU_0_1 MIG-e1ff7c6c-30f0-5e19-a37c-6832cce8b050
-    set -gx GPU_0_2 MIG-904c8af2-f525-5638-9571-bcc6be654ee6
-    set -gx GPU_5_1 MIG-43688515-87d9-5bf1-97d7-a0c6c2471e19
-    set -gx GPU_5_2 MIG-8672e368-8ce8-5ade-8824-5c315cfb7fa7
+    # MIG
+    # set -gx GPU_0_1 MIG-e1ff7c6c-30f0-5e19-a37c-6832cce8b050
+    # set -gx GPU_0_2 MIG-904c8af2-f525-5638-9571-bcc6be654ee6
+    # set -gx GPU_5_1 MIG-43688515-87d9-5bf1-97d7-a0c6c2471e19
+    # set -gx GPU_5_2 MIG-8672e368-8ce8-5ade-8824-5c315cfb7fa7
 end
 
 # Go binaries

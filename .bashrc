@@ -41,16 +41,16 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 export CUDA_DEVICE_ORDER="PCI_BUS_ID"
 
-# Load Go paths; only if the hostname is 'ankita'
 if [ "$(hostname)" = "ankita" ]; then
     export GOROOT=$HOME/.local/go
     export GOPATH=$HOME/go
     export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 
-    export GPU_0_1=MIG-e1ff7c6c-30f0-5e19-a37c-6832cce8b050
-    export GPU_0_2=MIG-904c8af2-f525-5638-9571-bcc6be654ee6
-    export GPU_5_1=MIG-43688515-87d9-5bf1-97d7-a0c6c2471e19
-    export GPU_5_2=MIG-8672e368-8ce8-5ade-8824-5c315cfb7fa7
+    # MIG
+    # export GPU_0_1=MIG-e1ff7c6c-30f0-5e19-a37c-6832cce8b050
+    # export GPU_0_2=MIG-904c8af2-f525-5638-9571-bcc6be654ee6
+    # export GPU_5_1=MIG-43688515-87d9-5bf1-97d7-a0c6c2471e19
+    # export GPU_5_2=MIG-8672e368-8ce8-5ade-8824-5c315cfb7fa7
 fi
 if [ "$(hostname)" = "wpeb-436-19l" ]; then
     export PATH=$PATH:/usr/local/go/bin
