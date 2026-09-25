@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>nvim Keybinds</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+  /* Gruvbox, matching the editor theme */
+  :root {
+    color-scheme: light;
+    --bg: #fbf1c7;
+    --panel: #f2e5bc;
+    --cap: #ebdbb2;
+    --cap-edge: #d5c4a1;
+    --line: #e0d0a8;
+    --fg: #3c3836;
+    --muted: #7c6f64;
+    --accent: #af3a03;
+    --config: #af3a03;
+    --panel-kind: #427b58;
+    --plugin: #076678;
+    --builtin: #7c6f64;
+    --mark: #fabd2f55;
+    --sans: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #1d2021;
+      --panel: #282828;
+      --cap: #32302f;
+      --cap-edge: #504945;
+      --line: #3c3836;
+      --fg: #ebdbb2;
+      --muted: #a89984;
+      --accent: #fe8019;
+      --config: #fe8019;
+      --panel-kind: #8ec07c;
+      --plugin: #83a598;
+      --builtin: #a89984;
+      --mark: #d7992155;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #1d2021;
+    --panel: #282828;
+    --cap: #32302f;
+    --cap-edge: #504945;
+    --line: #3c3836;
+    --fg: #ebdbb2;
+    --muted: #a89984;
+    --accent: #fe8019;
+    --config: #fe8019;
+    --panel-kind: #8ec07c;
+    --plugin: #83a598;
+    --builtin: #a89984;
+    --mark: #d7992155;
+  }
+
+  * { box-sizing: border-box; }
+  html { background: var(--bg); }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font: 15px/1.5 var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1200px; margin: 0 auto; padding-inline: 20px; }
+
+  header.bar {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 5;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+  }
+  .bar-inner { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding-block: 14px; }
+  .title { display: flex; align-items: baseline; gap: 12px; margin-right: auto; }
+  h1 { font: 600 20px/1.2 var(--mono); margin: 0; letter-spacing: -0.01em; }
+  h1 .colon { color: var(--accent); }
+  .stats { color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
+
+  .search { position: relative; flex: 1 1 280px; max-width: 420px; }
+  .search input {
+    width: 100%;
+    font: 14px var(--sans);
+    color: var(--fg);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 8px 36px 8px 12px;
+  }
+  .search input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+  .search .hint { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); pointer-events: none; }
+
+  .modes { display: flex; gap: 6px; flex-wrap: wrap; }
+  .mode-btn {
+    font: 500 12px var(--mono);
+    color: var(--muted);
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 4px 10px;
+    cursor: pointer;
+  }
+  .mode-btn[aria-pressed="true"] { color: var(--bg); background: var(--fg); border-color: var(--fg); }
+  .mode-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .layout { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 32px; padding-block: 24px 64px; }
+  nav.toc { position: sticky; top: 92px; align-self: start; max-height: calc(100vh - 110px); overflow-y: auto; font-size: 13px; }
+  .toc h2 { font: 600 11px var(--sans); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 16px 0 6px; }
+  .toc h2:first-child { margin-top: 0; }
+  .toc a {
+    display: flex; justify-content: space-between; gap: 8px;
+    color: var(--fg); text-decoration: none;
+    padding: 3px 8px; border-radius: 4px;
+  }
+  .toc a:hover { background: var(--panel); }
+  .toc a .n { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .toc a[hidden] { display: none; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 18px; color: var(--muted); font-size: 13px; margin-bottom: 20px; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+
+  section.group { margin-bottom: 32px; scroll-margin-top: 90px; }
+  .group-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; border-bottom: 2px solid var(--kind); padding-bottom: 6px; margin-bottom: 4px; }
+  .group-head h3 { font: 600 16px var(--mono); margin: 0; }
+  .kind { font: 600 11px var(--sans); text-transform: uppercase; letter-spacing: 0.08em; color: var(--kind); }
+  .group-head .note { color: var(--muted); font-size: 13px; }
+  .group-head .count { margin-left: auto; color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
+  .k-config { --kind: var(--config); }
+  .k-panel { --kind: var(--panel-kind); }
+  .k-plugin { --kind: var(--plugin); }
+  .k-builtin { --kind: var(--builtin); }
+
+  .row {
+    display: grid;
+    grid-template-columns: minmax(170px, 240px) minmax(0, 1fr) auto;
+    gap: 6px 16px;
+    align-items: center;
+    padding: 8px 4px;
+    border-bottom: 1px solid var(--line);
+  }
+  .row:hover { background: var(--panel); }
+  .keys { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+  kbd {
+    display: inline-flex; align-items: center; gap: 3px;
+    font: 500 12.5px/1 var(--mono);
+    color: var(--fg);
+    background: var(--cap);
+    border: 1px solid var(--cap-edge);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    padding: 4px 6px;
+    min-width: 22px; justify-content: center;
+    white-space: nowrap;
+  }
+  kbd.leader { color: var(--accent); border-color: var(--accent); background: transparent; }
+  kbd .mod { color: var(--muted); font-weight: 400; }
+  .alt-note { font-size: 12px; color: var(--muted); }
+  .desc { min-width: 0; overflow-wrap: anywhere; }
+  .desc code { font: 12.5px var(--mono); color: var(--muted); }
+  .desc .fn { color: var(--muted); font-style: italic; }
+  .meta { display: flex; align-items: center; gap: 10px; justify-self: end; }
+  .pills { display: flex; gap: 3px; }
+  .pill { font: 600 10.5px/1 var(--mono); color: var(--muted); border: 1px solid var(--line); border-radius: 3px; padding: 3px 4px; }
+  .where { font: 12px var(--mono); color: var(--muted); white-space: nowrap; }
+  mark { background: var(--mark); color: inherit; border-radius: 2px; }
+
+  .empty { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 24px; max-width: 60ch; }
+  .empty h2 { margin: 0 0 8px; font: 600 18px var(--mono); }
+  .empty code, footer code { font: 13px var(--mono); background: var(--cap); padding: 1px 5px; border-radius: 3px; }
+  .no-results { color: var(--muted); padding: 24px 0; }
+
+  footer { color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); padding-block: 16px 32px; }
+
+  @media (max-width: 860px) {
+    .layout { grid-template-columns: minmax(0, 1fr); }
+    nav.toc { display: none; }
+  }
+  @media (max-width: 560px) {
+    .row { grid-template-columns: minmax(0, 1fr); }
+    .meta { justify-self: start; }
+    .search { max-width: none; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+  }
+</style>
+</head>
+<body>
+<header class="bar">
+  <div class="wrap bar-inner">
+    <div class="title">
+      <h1><span class="colon">:</span>Keybinds</h1>
+      <span class="stats" id="stats"></span>
+    </div>
+    <label class="search" for="q">
+      <input id="q" type="search" placeholder="Search keys or actions" autocomplete="off" spellcheck="false" aria-label="Search keys or actions">
+      <kbd class="hint">/</kbd>
+    </label>
+    <div class="modes" id="modes" role="group" aria-label="Filter by mode"></div>
+  </div>
+</header>
+
+<div class="wrap layout">
+  <nav class="toc" id="toc" aria-label="Sections"></nav>
+  <main>
+    <div class="legend" id="legend"></div>
+    <div id="list"></div>
+  </main>
+</div>
+
+<footer>
+  <div class="wrap" id="footer"></div>
+</footer>
+
+<script src="keymaps.js"></script>
+<script>
+(function () {
+  const data = window.KEYBINDS;
+  const $ = (id) => document.getElementById(id);
+
+  const MODES = [
+    ["n", "Normal"], ["x", "Visual"], ["o", "Operator-pending"],
+    ["i", "Insert"], ["t", "Terminal"], ["c", "Command-line"],
+  ];
+  const MODE_LETTER = { n: "N", x: "V", o: "O", i: "I", t: "T", c: "C" };
+
+  if (!data) {
+    $("list").innerHTML =
+      '<div class="empty"><h2>No keybind data yet</h2>' +
+      "<p>This page reads <code>keymaps.js</code> from the same folder. Neovim writes it on startup, " +
+      "so open nvim once, or run <code>:Keybinds</code> inside nvim to write it and open this page.</p></div>";
+    return;
+  }
+
+  const leader = data.leader === undefined || data.leader === null ? "\\" : data.leader;
+
+  // ---- Key rendering -------------------------------------------------------
+  const MOD = { C: ["⌃", "Ctrl"], M: ["⌥", "Alt"], A: ["⌥", "Alt"], D: ["⌘", "Cmd"], S: ["⇧", "Shift"] };
+  const NAMES = {
+    CR: "Enter", Esc: "Esc", BS: "⌫", Tab: "Tab", Del: "Del", Space: "Space",
+    Up: "↑", Down: "↓", Left: "←", Right: "→", lt: "<", Bslash: "\\", Bar: "|",
+    Home: "Home", End: "End", PageUp: "PgUp", PageDown: "PgDn", Insert: "Ins",
+    LeftMouse: "Click", "2-LeftMouse": "Double-click", RightMouse: "Right-click",
+    MiddleMouse: "Middle-click", ScrollWheelUp: "Scroll ↑", ScrollWheelDown: "Scroll ↓",
+    Nul: "⌃Space",
+  };
+
+  function parseKeys(lhs) {
+    const tokens = lhs.match(/<[^<>]+>|./g) || [];
+    return tokens.map((tok, i) => {
+      if (tok.length === 1 || tok === "<>") return { key: tok, mods: [] };
+      let inner = tok.slice(1, -1);
+      const mods = [];
+      while (inner.length > 2 && inner[1] === "-" && MOD[inner[0].toUpperCase()]) {
+        mods.push(inner[0].toUpperCase());
+        inner = inner.slice(2);
+      }
+      let key = NAMES[inner] || inner;
+      if (mods.length && key.length === 1) key = key.toLowerCase();
+      const isLeader = i === 0 && !mods.length && inner === "Space" && leader === " ";
+      return { key, mods, leader: isLeader };
+    });
+  }
+
+  function keyText(lhs) {
+    return parseKeys(lhs).map((t) => t.mods.map((m) => MOD[m][1]).concat(t.key).join(" ")).join(" ");
+  }
+
+  function renderKeys(lhs) {
+    return parseKeys(lhs).map((t) => {
+      const title = t.mods.map((m) => MOD[m][1]).concat(t.key).join("+");
+      const mods = t.mods.map((m) => `<span class="mod">${MOD[m][0]}</span>`).join("");
+      const cls = t.leader ? ' class="leader"' : "";
+      return `<kbd${cls} title="${esc(t.leader ? "Space (leader)" : title)}">${mods}${esc(t.key)}</kbd>`;
+    }).join("");
+  }
+
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  }
+
+  // ---- Grouping ------------------------------------------------------------
+  const CONFIG_ORDER = ["core/zed.lua", "core/keymaps.lua"];
+  const groups = new Map();
+
+  function groupFor(src) {
+    if (src.group === "config") return { id: "cfg-" + src.file, title: src.file, kind: "config", label: "Your config" };
+    if (src.group === "plugin") return { id: "plg-" + src.name, title: src.name, kind: "plugin", label: "Plugin" };
+    if (src.group === "other") return { id: "oth-" + src.name, title: src.name, kind: "plugin", label: "Other" };
+    return { id: "builtin", title: "Neovim", kind: "builtin", label: "Built-in" };
+  }
+
+  function add(g, entry) {
+    if (!groups.has(g.id)) groups.set(g.id, Object.assign({ entries: [] }, g));
+    groups.get(g.id).entries.push(entry);
+  }
+
+  for (const e of data.global) add(groupFor(e.source || {}), e);
+  for (const ctx of data.contexts || []) {
+    const g = { id: "ctx-" + ctx.name, title: ctx.name, kind: "panel", label: "Only in this buffer", note: `captured ${ctx.seen}` };
+    for (const e of ctx.maps) add(g, e);
+  }
+
+  // ⌘ binds also arrive as ⌥ inside tmux; show them once
+  for (const g of groups.values()) {
+    const byKey = new Map(g.entries.map((e) => [e.lhs + "\0" + (e.desc || ""), e]));
+    g.entries = g.entries.filter((e) => {
+      const m = e.lhs.match(/^<M-(.+)>$/);
+      if (!m) return true;
+      const twin = byKey.get(`<D-${m[1]}>` + "\0" + (e.desc || ""));
+      if (twin) { twin.altNote = true; return false; }
+      return true;
+    });
+    g.entries.sort((a, b) => keyText(a.lhs).localeCompare(keyText(b.lhs)));
+  }
+
+  const rank = (g) => {
+    if (g.kind === "config") {
+      const i = CONFIG_ORDER.indexOf(g.title);
+      return [0, i === -1 ? 99 : i, g.title];
+    }
+    return [{ panel: 1, plugin: 2, builtin: 3 }[g.kind], 0, g.title.toLowerCase()];
+  };
+  const ordered = [...groups.values()].sort((a, b) => {
+    const [x, y] = [rank(a), rank(b)];
+    return x[0] - y[0] || x[1] - y[1] || x[2].localeCompare(y[2]);
+  });
+
+  // ---- Render --------------------------------------------------------------
+  const SECTION_TITLES = { config: "Your config", panel: "Panels & buffers", plugin: "Plugins", builtin: "Built-in" };
+
+  function whereText(src) {
+    if (!src) return "";
+    if (src.group === "config") return src.file.replace(/^.*\//, "") + (src.line ? ":" + src.line : "");
+    return "";
+  }
+
+  function descHtml(e) {
+    if (e.desc) return esc(e.desc);
+    if (e.rhs) return `<code>${esc(e.rhs)}</code>`;
+    return '<span class="fn">Lua function, no description</span>';
+  }
+
+  const rows = [];
+  let tocHtml = "";
+  let lastKind = null;
+  const list = $("list");
+  const frag = document.createDocumentFragment();
+
+  for (const g of ordered) {
+    if (g.kind !== lastKind) {
+      tocHtml += `<h2>${SECTION_TITLES[g.kind]}</h2>`;
+      lastKind = g.kind;
+    }
+    const sid = "g-" + g.id.replace(/[^A-Za-z0-9_-]/g, "-");
+    tocHtml += `<a href="#${sid}" data-g="${sid}"><span>${esc(g.title)}</span><span class="n"></span></a>`;
+
+    const sec = document.createElement("section");
+    sec.className = "group k-" + g.kind;
+    sec.id = sid;
+    sec.innerHTML =
+      `<div class="group-head"><h3>${esc(g.title)}</h3><span class="kind">${esc(g.label)}</span>` +
+      (g.note ? `<span class="note">${esc(g.note)}</span>` : "") +
+      `<span class="count"></span></div>`;
+
+    for (const e of g.entries) {
+      const row = document.createElement("div");
+      row.className = "row";
+      const pills = MODES.filter(([m]) => e.modes.includes(m))
+        .map(([m, name]) => `<span class="pill" title="${name}">${MODE_LETTER[m]}</span>`).join("");
+      const where = whereText(e.source);
+      row.innerHTML =
+        `<div class="keys">${renderKeys(e.lhs)}${e.altNote ? '<span class="alt-note" title="tmux turns ⌘ into Alt">⌥ in tmux</span>' : ""}</div>` +
+        `<div class="desc">${descHtml(e)}</div>` +
+        `<div class="meta"><span class="pills">${pills}</span>${where ? `<span class="where">${esc(where)}</span>` : ""}</div>`;
+      const descEl = row.querySelector(".desc");
+      rows.push({
+        el: row, sec, modes: e.modes, descEl, descHtml: descHtml(e),
+        hay: [keyText(e.lhs), e.lhs, e.desc || "", e.rhs || "", g.title].join(" ").toLowerCase(),
+      });
+      sec.appendChild(row);
+    }
+    frag.appendChild(sec);
+  }
+  list.appendChild(frag);
+  const noResults = document.createElement("p");
+  noResults.className = "no-results";
+  noResults.hidden = true;
+  list.appendChild(noResults);
+  $("toc").innerHTML = tocHtml;
+
+  $("legend").innerHTML =
+    `<span><kbd class="leader">Space</kbd> leader key</span>` +
+    `<span><kbd><span class="mod">⌃</span>h</kbd> Ctrl</span>` +
+    `<span><kbd><span class="mod">⌥</span>j</kbd> Alt</span>` +
+    `<span><kbd><span class="mod">⌘</span>j</kbd> Cmd</span>` +
+    `<span><kbd><span class="mod">⇧</span>c</kbd> Shift</span>` +
+    `<span>N V O I T C modes</span>`;
+
+  const total = rows.length;
+  $("footer").innerHTML =
+    `Generated ${esc(data.generated || "")} from Neovim ${esc(data.nvim || "")}. ` +
+    `Updates on its own as nvim starts, plugins load and panels open. Run <code>:Keybinds</code> in nvim to refresh and reopen this page.`;
+
+  // ---- Filtering -----------------------------------------------------------
+  let active;
+  try { active = new Set(JSON.parse(localStorage.getItem("keybinds-modes"))); } catch (_) {}
+  if (!active || !active.size) active = new Set(MODES.map(([m]) => m));
+
+  $("modes").innerHTML = MODES.map(([m, name]) =>
+    `<button type="button" class="mode-btn" id="mode-${m}" data-mode="${m}" title="${name}" aria-pressed="${active.has(m)}">${name}</button>`
+  ).join("");
+  $("modes").addEventListener("click", (ev) => {
+    const btn = ev.target.closest("button[data-mode]");
+    if (!btn) return;
+    const m = btn.dataset.mode;
+    active.has(m) ? active.delete(m) : active.add(m);
+    btn.setAttribute("aria-pressed", active.has(m));
+    try { localStorage.setItem("keybinds-modes", JSON.stringify([...active])); } catch (_) {}
+    apply();
+  });
+
+  const q = $("q");
+  function highlight(html, term) {
+    if (!term) return html;
+    // highlight only in text, not inside tags
+    return html.replace(/(^|>)([^<]+)/g, (_, a, text) =>
+      a + text.replace(new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "ig"), (m) => `<mark>${m}</mark>`));
+  }
+
+  function apply() {
+    const term = q.value.trim().toLowerCase();
+    const words = term.split(/\s+/).filter(Boolean);
+    const counts = new Map();
+    let shown = 0;
+    for (const r of rows) {
+      const ok = r.modes.some((m) => active.has(m)) && words.every((w) => r.hay.includes(w));
+      r.el.hidden = !ok;
+      r.descEl.innerHTML = ok && term ? highlight(r.descHtml, term) : r.descHtml;
+      if (ok) { shown++; counts.set(r.sec, (counts.get(r.sec) || 0) + 1); }
+    }
+    for (const sec of list.querySelectorAll("section.group")) {
+      const n = counts.get(sec) || 0;
+      sec.hidden = n === 0;
+      sec.querySelector(".count").textContent = n + (n === 1 ? " bind" : " binds");
+      const link = document.querySelector(`.toc a[data-g="${sec.id}"]`);
+      if (link) { link.hidden = n === 0; link.querySelector(".n").textContent = n; }
+    }
+    for (const h of document.querySelectorAll(".toc h2")) {
+      let el = h.nextElementSibling, any = false;
+      while (el && el.tagName === "A") { if (!el.hidden) any = true; el = el.nextElementSibling; }
+      h.hidden = !any;
+    }
+    noResults.hidden = shown > 0;
+    noResults.textContent = `No keybinds match “${q.value.trim()}” in the selected modes.`;
+    $("stats").textContent = shown === total ? `${total} keybinds` : `${shown} of ${total} keybinds`;
+  }
+
+  q.addEventListener("input", apply);
+  document.addEventListener("keydown", (ev) => {
+    if (ev.key === "/" && document.activeElement !== q) { ev.preventDefault(); q.focus(); q.select(); }
+    else if (ev.key === "Escape" && document.activeElement === q) { q.value = ""; apply(); q.blur(); }
+  });
+  apply();
+})();
+</script>
+</body>
+</html>

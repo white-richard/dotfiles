@@ -1,3 +1,4 @@
+require('core.keybinds').setup() -- Keybind reference page (:Keybinds); must run before any keymap is set
 require 'core.keymaps' -- Load general keymaps
 
 require 'core.options' -- Load general options
