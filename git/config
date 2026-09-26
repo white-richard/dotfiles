@@ -41,4 +41,4 @@ rig = set-origin
 
 whereami = remote -v
 [credential]
-	helper = store
+	helper = osxkeychain
