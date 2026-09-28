@@ -1,6 +1,6 @@
 #!/usr/bin/env fish
 
-argparse 'd' -- $argv
+argparse 'd' 'o' -- $argv
 or exit 1
 
 set DOTFILES_DIR (cd (status dirname); and pwd)
@@ -25,6 +25,47 @@ if test -f .env
     end
 end
 # --------------
+
+# Copy (not symlink) obsidian config into each vault
+function sync_obsidian
+    set -l obsidian_source "$DOTFILES_DIR/obsidian"
+
+    for vault in $OBSIDIAN_VAULTS
+        if not test -d "$vault"
+            echo "Skipping missing vault: $vault"
+            continue
+        end
+
+        set -l vault_config "$vault/.obsidian"
+        mkdir -p "$vault_config"
+
+        for item in $obsidian_source/* $obsidian_source/.vimrc
+            set -l target_item "$vault_config/"(basename "$item")
+
+            # Drop leftover symlinks so we never write through them into dotfiles
+            if test -L "$target_item"
+                rm "$target_item"
+            end
+
+            if test -d "$item"
+                # Mirror dirs so removed plugins/themes disappear from vaults too
+                rsync -a --delete --exclude .DS_Store "$item/" "$target_item/"
+            else
+                cp "$item" "$target_item"
+            end
+        end
+        echo "Synced: obsidian -> "(basename "$vault")
+    end
+end
+
+if set -q _flag_o
+    if not set -q OBSIDIAN_VAULTS[1]
+        echo "No OBSIDIAN_VAULTS in .env"
+        exit 1
+    end
+    sync_obsidian
+    exit
+end
 
 echo "Starting..."
 echo "------------------------------------"
@@ -103,34 +144,7 @@ if test (uname) = Darwin # MacOS
 end
 
 if test (uname) = Darwin; and set -q OBSIDIAN_VAULTS[1]
-    set -l obsidian_source "$DOTFILES_DIR/obsidian"
-
-    for vault in $OBSIDIAN_VAULTS
-        if not test -d "$vault"
-            echo "Skipping missing vault: $vault"
-            continue
-        end
-
-        set -l vault_config "$vault/.obsidian"
-        if not test -d "$vault_config"
-            mkdir -p "$vault_config"
-            echo "Created directory: $vault_config"
-        end
-
-        for item in $obsidian_source/* $obsidian_source/.vimrc
-            set -l basename (basename "$item")
-            set -l target_item "$vault_config/$basename"
-
-            if test -L "$target_item"; and [ (readlink "$target_item") = "$item" ]
-                continue
-            end
-
-            # Remove existing (file or dir) and relink
-            rm -rf "$target_item"
-            ln -s "$item" "$target_item"
-            echo "Linked: obsidian/$basename -> $vault"
-        end
-    end
+    sync_obsidian
 end
 
 if set -q _flag_d
