@@ -77,81 +77,63 @@
     {
       "host": "wpeb-server",
       "args": [],
-      "projects": []
+      "projects": [],
     },
     {
       "host": "home",
       "args": [],
       "projects": [
         {
-          "paths": [
-            "/home/richw/.code/archive/pasta/./"
-          ]
+          "paths": ["/home/richw/.code/archive/pasta/./"],
         },
         {
-          "paths": [
-            "/home/richw/.code/nyx_lang/./"
-          ]
+          "paths": ["/home/richw/.code/nyx_lang/./"],
         },
         {
-          "paths": [
-            "/home/richw/.code/open-penny/./"
-          ]
-        }
-      ]
+          "paths": ["/home/richw/.code/open-penny/./"],
+        },
+      ],
     },
     {
       "host": "wpeb-print",
       "args": [],
-      "projects": []
+      "projects": [],
     },
     {
       "host": "wpeb-mary",
       "args": [],
-      "projects": []
+      "projects": [],
     },
     {
       "host": "wpeb-desk",
       "args": [],
       "projects": [
         {
-          "paths": [
-            "/home/richw/.code/conf-wall"
-          ]
+          "paths": ["/home/richw/.code/conf-wall"],
         },
         {
-          "paths": [
-            "/home/richw/.code/mammoclip/./"
-          ]
+          "paths": ["/home/richw/.code/mammoclip/./"],
         },
         {
-          "paths": [
-            "/home/richw/.code/nut-ups-cutoff"
-          ]
-        }
-      ]
+          "paths": ["/home/richw/.code/nut-ups-cutoff"],
+        },
+      ],
     },
     {
       "host": "ankita",
       "args": [],
       "projects": [
         {
-          "paths": [
-            "/home/richw/.code/genesis-agent/./"
-          ]
+          "paths": ["/home/richw/.code/genesis-agent/./"],
         },
         {
-          "paths": [
-            "/home/richw/.code/mammoclip/./"
-          ]
+          "paths": ["/home/richw/.code/mammoclip/./"],
         },
         {
-          "paths": [
-            "/home/richw/.code/tta-mammo/./"
-          ]
-        }
-      ]
-    }
+          "paths": ["/home/richw/.code/tta-mammo/./"],
+        },
+      ],
+    },
   ],
   "telemetry": {
     "diagnostics": false,
@@ -171,10 +153,13 @@
   "minimap": {
     "show": "never",
   },
-  // NOTE: no `autosave`. Zed's autosave saves *without* running `format_on_save`
-  // (zed-industries/zed#16588, #27469, #30077), so an autosave timer means the
-  // buffer is almost always already saved before a format ever runs. Saving
-  // explicitly keeps Zed's behaviour identical to nvim's BufWritePre hook.
+  // Autosave writes skip `format_on_save`; cmd+s always formats, even an
+  // already-autosaved file (fixed since zed-industries/zed#16588).
+  "autosave": {
+    "after_delay": {
+      "milliseconds": 500,
+    },
+  },
   "icon_theme": {
     "mode": "system",
     "light": "Zed (Default)",
@@ -234,16 +219,16 @@
     "Markdown": {
       "show_edit_predictions": false,
     },
-    // The entries below exist to match nvim's none-ls formatters exactly.
-    // Same binary, same arguments, same config file discovery.
     "Lua": {
-      // lua-language-server advertises documentFormattingProvider and
-      // `Lua.format.enable` defaults to true, so leaving `formatter` unset
-      // would silently format with EmmyLuaCodeStyle instead of stylua.
       "formatter": {
         "external": {
           "command": "stylua",
-          "arguments": ["--search-parent-directories", "--stdin-filepath", "{buffer_path}", "-"],
+          "arguments": [
+            "--search-parent-directories",
+            "--stdin-filepath",
+            "{buffer_path}",
+            "-",
+          ],
         },
       },
     },
@@ -264,9 +249,7 @@
       },
     },
     "Dockerfile": {
-      // nvim does not format Dockerfiles; keep docker-language-server from
-      // doing it here.
-      "format_on_save": "off",
+      "format_on_save": "on",
     },
     "TOML": {
       "formatter": "language_server",
@@ -275,9 +258,6 @@
     "Python": {
       "show_edit_predictions": true,
       "language_servers": ["ruff", "!basedpyright", "pylsp"],
-      // Scoped to Python: nvim only runs these as part of its ruff chain.
-      // Globally, this also fired eslint's source.fixAll on JS/TS, which nvim
-      // has no equivalent for.
       "code_actions_on_format": {
         "source.organizeImports": true,
         "source.fixAll": true,
@@ -291,7 +271,6 @@
     "harper-ls": {
       "settings": {
         "harper-ls": {
-          // Use a specific English dialect
           "dialect": "American",
           "linters": {
             // Disable specific rules
@@ -334,22 +313,12 @@
         },
       },
     },
-    // "tinymist": {
-    //   "settings": {
-    //     "exportPdf": "onSave",
-    //     "outputPath": "$root/$name",
-    //   },
-    // },
     "tinymist": {
       "initialization_options": {
         "preview": {
           "background": {
             "enabled": true,
-            "args": [
-              "--data-plane-host=127.0.0.1:23635",
-              // "--invert-colors=auto",
-              "--open",
-            ],
+            "args": ["--data-plane-host=127.0.0.1:23635", "--open"],
           },
         },
       },
@@ -366,14 +335,6 @@
       },
     },
   },
-  // Blurred background
-  // "experimental.theme_overrides": {
-  //   "background.appearance": "blurred",
-  //   "background": "#00000070",
-  //   "panel.background": "#00000030",
-  //   "editor.background": "#00000020",
-  //   "status_bar.background": "#00000090"
-  // },
   "relative_line_numbers": "enabled",
   "scroll_sensitivity": 1.0, // Scroll sensitivity multiplier
   // Scroll sensitivity multiplier for fast scrolling (hold alt while scrolling)
