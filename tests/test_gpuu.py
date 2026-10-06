@@ -115,6 +115,19 @@ class CollectorTest(unittest.TestCase):
         self.assertEqual(restarted["history"], stopped["history"])
         self.assertEqual(restarted["collection_started"], stopped["collection_started"])
 
+    def test_root_processes_are_ignored(self):
+        self.input([device(users=("root",))])
+        self.start()
+        idle = self.wait_for(lambda s: s["devices"])
+        self.assertEqual(idle["devices"][0]["processes"], [])
+        self.assertNotIn("GPU-a", idle["history"])
+        self.input([device(users=("root", "alice"))])
+        active = self.wait_for(lambda s: "GPU-a" in s["history"])
+        self.assertEqual(active["history"]["GPU-a"]["users"], ["alice"])
+        self.assertEqual(
+            [p["user"] for p in active["devices"][0]["processes"]], ["alice"]
+        )
+
     def test_query_failure_does_not_erase_history_or_report_idle(self):
         self.input([device(users=("alice",))])
         self.start()

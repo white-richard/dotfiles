@@ -19,6 +19,7 @@ from pathlib import Path
 INTERVAL = 0.25
 SCRIPT = Path(__file__).resolve()
 UNIT = "gpuu.service"
+IGNORED_USERS = {"root"}  # System daemons (e.g. persistenced, Xorg) aren't real use.
 
 
 class ProcessInfo(ct.Structure):
@@ -165,6 +166,14 @@ def collector_running(directory):
         return False
 
 
+def without_ignored_users(devices):
+    for device in devices:
+        device["processes"] = [
+            process for process in device["processes"] if process["user"] not in IGNORED_USERS
+        ]
+    return devices
+
+
 def record_sample(state, devices, timestamp):
     for device in devices:
         if device["processes"]:
@@ -201,7 +210,7 @@ def collect(directory, factory=NVML):
                 try:
                     if monitor is None:
                         monitor = factory()
-                    devices = monitor.sample()
+                    devices = without_ignored_users(monitor.sample())
                     record_sample(state, devices, time.time())
                     signature = [
                         (
