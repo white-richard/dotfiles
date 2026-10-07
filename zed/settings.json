@@ -159,7 +159,7 @@
   "terminal": {
     "copy_on_select": false,
     "shell": {
-      "program": "/opt/homebrew/bin/fish",
+      "program": "fish",
     },
   },
   "base_keymap": "VSCode",
