@@ -20,6 +20,7 @@ INTERVAL = 0.25
 SCRIPT = Path(__file__).resolve()
 UNIT = "gpuu.service"
 IGNORED_USERS = {"root"}  # System daemons (e.g. persistenced, Xorg) aren't real use.
+MAX_GAP = 2.0  # Longer gaps between samples (suspend, stalls) aren't counted as observed.
 
 
 class ProcessInfo(ct.Structure):
@@ -182,6 +183,33 @@ def record_sample(state, devices, timestamp):
     state.update(devices=devices, updated=timestamp, error=None)
 
 
+def flush_usage(directory, state):
+    """Append the in-progress hour bucket to usage.jsonl (read by ,gput)."""
+    bucket = state.pop("usage", None)
+    if not bucket or not bucket["gpus"]:
+        return
+    with (directory / "usage.jsonl").open("a") as log:
+        for uuid, gpu in sorted(bucket["gpus"].items()):
+            log.write(json.dumps(dict(gpu, id=bucket["id"], hour=bucket["hour"], gpu=uuid)) + "\n")
+
+
+def record_usage(directory, state, devices, now, elapsed):
+    """Credit elapsed seconds to each GPU; shared GPUs split time between users."""
+    hour = int(now // 3600 * 3600)
+    if state.get("usage") and state["usage"]["hour"] != hour:
+        flush_usage(directory, state)
+    bucket = state.setdefault("usage", dict(id=os.urandom(6).hex(), hour=hour, gpus={}))
+    for device in devices:
+        gpu = bucket["gpus"].setdefault(
+            device["uuid"],
+            dict(index=device["index"], name=device["name"], observed=0.0, users={}),
+        )
+        gpu["observed"] += elapsed
+        users = sorted({process["user"] for process in device["processes"]})
+        for user in users:
+            gpu["users"][user] = gpu["users"].get(user, 0.0) + elapsed / len(users)
+
+
 def collect(directory, factory=NVML):
     with (directory / "collector.lock").open("a") as lock:
         try:
@@ -189,11 +217,13 @@ def collect(directory, factory=NVML):
         except BlockingIOError:
             return 0
         state = read_state(directory)
+        flush_usage(directory, state)  # Leftover partial hour from a previous run.
         state.update(
             pid=os.getpid(),
             started=time.time(),
             interval=INTERVAL,
             stopped=False,
+            usage_version=1,
         )
         stopping = False
 
@@ -203,7 +233,7 @@ def collect(directory, factory=NVML):
 
         signal.signal(signal.SIGTERM, stop)
         signal.signal(signal.SIGINT, stop)
-        monitor, last_write, previous = None, 0, None
+        monitor, last_write, previous, last_sample = None, 0, None, None
         try:
             while not stopping:
                 began = time.monotonic()
@@ -211,7 +241,11 @@ def collect(directory, factory=NVML):
                     if monitor is None:
                         monitor = factory()
                     devices = without_ignored_users(monitor.sample())
-                    record_sample(state, devices, time.time())
+                    now, sampled = time.time(), time.monotonic()
+                    record_sample(state, devices, now)
+                    if last_sample is not None and sampled - last_sample <= MAX_GAP:
+                        record_usage(directory, state, devices, now, sampled - last_sample)
+                    last_sample = sampled
                     signature = [
                         (
                             d["uuid"],
@@ -222,7 +256,7 @@ def collect(directory, factory=NVML):
                     delay = INTERVAL
                 except (OSError, RuntimeError, AttributeError) as error:
                     state["error"] = str(error)
-                    signature, delay = str(error), 2
+                    signature, delay, last_sample = str(error), 2, None
                     if monitor is not None:
                         monitor.close()
                         monitor = None
@@ -235,6 +269,7 @@ def collect(directory, factory=NVML):
         finally:
             if monitor is not None:
                 monitor.close()
+            flush_usage(directory, state)
             state["stopped"] = True
             write_state(directory, state)
     return 0

@@ -148,6 +148,19 @@ class CollectorTest(unittest.TestCase):
         )
         self.assertGreater(recovered["updated"], failed["updated"])
 
+    def test_usage_seconds_are_split_and_flushed_on_stop(self):
+        self.input([device(users=("alice", "bob"))])
+        child = self.start()
+        self.wait_for(lambda s: s.get("usage", {}).get("gpus", {}).get("GPU-a", {}).get("observed", 0) > 0.6)
+        child.terminate()
+        child.join(timeout=4)
+        self.assertNotIn("usage", gpuu.read_state(self.directory))
+        lines = (self.directory / "usage.jsonl").read_text().splitlines()
+        entry = json.loads(lines[-1])
+        self.assertEqual(entry["gpu"], "GPU-a")
+        self.assertAlmostEqual(entry["users"]["alice"], entry["users"]["bob"])
+        self.assertAlmostEqual(entry["users"]["alice"] * 2, entry["observed"], places=3)
+
     def test_duplicate_collectors_exit_without_replacing_running_one(self):
         self.input([device()])
         first = self.start()
