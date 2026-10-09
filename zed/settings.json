@@ -121,6 +121,11 @@
         },
         {
           "paths": [
+            "/home/richw/.code/gpu-mode/lecture_001/./"
+          ]
+        },
+        {
+          "paths": [
             "/home/richw/.code/tta-mammo/./"
           ]
         }
