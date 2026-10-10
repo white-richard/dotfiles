@@ -1,0 +1,7 @@
+os:
+  editPreset: nvim
+
+keybinding:
+  universal:
+    edit: o
+    openFile: O

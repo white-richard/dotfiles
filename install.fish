@@ -12,7 +12,10 @@ set -l remote_cmd "cd ~/.dotfiles && git pull && fish install.fish"
 # --- Config ---
 
 # Configs to be symlinked
-set APPS fish nvim tmux zed git ruff stylua ghostty Code
+set APPS fish nvim tmux zed git ruff stylua ghostty Code lazygit
+
+# Claude Code reads from ~/.claude rather than ~/.config
+set CLAUDE_DIR "$HOME/.claude"
 
 # Obsidian vaults (mac only) to link customization files into.
 if test -f .env
@@ -74,10 +77,8 @@ echo "------------------------------------"
 rm "$HOME/.bashrc"
 ln -s "$DOTFILES_DIR/.bashrc" "$HOME/.bashrc"
 
-for app in $APPS
-    set -l source_path "$DOTFILES_DIR/$app"
-    set -l target_path "$CONFIG_DIR/$app"
-
+# Symlink each item of a dotfiles dir into a target dir
+function link_items --argument-names source_path target_path label
     if not test -d "$target_path"
         mkdir -p "$target_path"
         echo "Created directory: $target_path"
@@ -98,9 +99,15 @@ for app in $APPS
 
         # Create the symlink
         ln -s "$item" "$target_item"
-        echo "Linked: $app/$basename"
+        echo "Linked: $label/$basename"
     end
 end
+
+for app in $APPS
+    link_items "$DOTFILES_DIR/$app" "$CONFIG_DIR/$app" $app
+end
+
+link_items "$DOTFILES_DIR/claude" "$CLAUDE_DIR" claude
 
 # Expose the formatter binaries that nvim and Zed share
 set -l MASON_BIN "$HOME/.local/share/nvim/mason/bin"
