@@ -78,6 +78,7 @@ rm "$HOME/.bashrc"
 ln -s "$DOTFILES_DIR/.bashrc" "$HOME/.bashrc"
 
 # Symlink each item of a dotfiles dir into a target dir
+# Extra args are item names to skip
 function link_items --argument-names source_path target_path label
     if not test -d "$target_path"
         mkdir -p "$target_path"
@@ -87,6 +88,10 @@ function link_items --argument-names source_path target_path label
     for item in $source_path/*
         set -l basename (basename "$item")
         set -l target_item "$target_path/$basename"
+
+        if contains -- $basename $argv[4..]
+            continue
+        end
 
         # Check if it's already a link
         if test -L "$target_item"; and [ (readlink "$target_item") = "$item" ]
@@ -107,7 +112,9 @@ for app in $APPS
     link_items "$DOTFILES_DIR/$app" "$CONFIG_DIR/$app" $app
 end
 
-link_items "$DOTFILES_DIR/claude" "$CLAUDE_DIR" claude
+# Link skills individually since Claude Code keeps its own dirs in ~/.claude/skills
+link_items "$DOTFILES_DIR/claude" "$CLAUDE_DIR" claude skills
+link_items "$DOTFILES_DIR/claude/skills" "$CLAUDE_DIR/skills" claude/skills
 
 # Expose the formatter binaries that nvim and Zed share
 set -l MASON_BIN "$HOME/.local/share/nvim/mason/bin"
