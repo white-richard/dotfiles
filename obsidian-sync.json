@@ -1,0 +1,14 @@
+{
+  "primary_vault": "Research",
+  "interval_seconds": 15,
+  "shared_files": [
+    ".vimrc", "app.json", "appearance.json", "community-plugins.json",
+    "core-plugins.json", "hotkeys.json", "types.json", "webviewer.json"
+  ],
+  "local_keys": {
+    "app.json": ["attachmentFolderPath"]
+  },
+  "shared_plugin_settings": [
+    "obsidian-linter", "obsidian-minimal-settings", "obsidian-underline"
+  ]
+}

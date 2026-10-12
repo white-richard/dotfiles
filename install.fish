@@ -29,36 +29,9 @@ if test -f .env
 end
 # --------------
 
-# Copy (not symlink) obsidian config into each vault
+# Install automatic syncing with real files for iCloud.
 function sync_obsidian
-    set -l obsidian_source "$DOTFILES_DIR/obsidian"
-
-    for vault in $OBSIDIAN_VAULTS
-        if not test -d "$vault"
-            echo "Skipping missing vault: $vault"
-            continue
-        end
-
-        set -l vault_config "$vault/.obsidian"
-        mkdir -p "$vault_config"
-
-        for item in $obsidian_source/* $obsidian_source/.vimrc
-            set -l target_item "$vault_config/"(basename "$item")
-
-            # Drop leftover symlinks so we never write through them into dotfiles
-            if test -L "$target_item"
-                rm "$target_item"
-            end
-
-            if test -d "$item"
-                # Mirror dirs so removed plugins/themes disappear from vaults too
-                rsync -a --delete --exclude .DS_Store "$item/" "$target_item/"
-            else
-                cp "$item" "$target_item"
-            end
-        end
-        echo "Synced: obsidian -> "(basename "$vault")
-    end
+    python3 "$DOTFILES_DIR/scripts/obsidian_sync.py" --install
 end
 
 if set -q _flag_o
@@ -66,7 +39,7 @@ if set -q _flag_o
         echo "No OBSIDIAN_VAULTS in .env"
         exit 1
     end
-    sync_obsidian
+    sync_obsidian; or exit 1
     exit
 end
 
