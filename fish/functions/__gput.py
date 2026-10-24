@@ -77,6 +77,18 @@ def local_epoch(day):
     return dt.datetime.combine(day, dt.time()).timestamp()
 
 
+def hour_periods(day, now):
+    """Local day's elapsed hours, including the current partial hour."""
+    begin = local_epoch(day)
+    end = min(local_epoch(day + dt.timedelta(days=1)), now)
+    periods = []
+    while begin < end:
+        local = dt.datetime.fromtimestamp(begin)
+        periods.append((local, begin, min(begin + 3600, end)))
+        begin += 3600
+    return periods
+
+
 def aggregate(records, periods, focus):
     """Return ({uuid: (index, name)}, {uuid: [period totals]})."""
     gpus, totals = {}, {}
@@ -188,6 +200,17 @@ def render_weeks(painter, gpus, totals, periods, width, now):
         print("GPU %s  %s" % gpus[uuid])
         for (start, begin, end), row in zip(periods, totals[uuid]):
             print("  %-10s │%s│ %s" % (week_label(start, now), bar(painter, row, width), summary(row, end - begin)))
+        print()
+
+
+def render_hourly(painter, gpus, totals, periods, width, day):
+    print("Hourly usage for %s (local time)" % day.isoformat())
+    # Include the UTC offset so repeated hours at the end of DST are distinct.
+    labels = [local.astimezone().strftime("%H:%M %z") for local, _, _ in periods]
+    for uuid in sorted(gpus, key=lambda u: gpus[u][0]):
+        print("GPU %s  %s" % gpus[uuid])
+        for label, (_, begin, end), row in zip(labels, periods, totals[uuid]):
+            print("  %s │%s│ %s" % (label, bar(painter, row, width), summary(row, end - begin)))
         print()
 
 
@@ -451,6 +474,8 @@ def main():
     view = parser.add_mutually_exclusive_group()
     view.add_argument("-a", "--avg", action="store_true", help="one bar per GPU averaged over N weeks")
     view.add_argument("-d", "--daily", action="store_true", help="column chart with one column per day")
+    view.add_argument("-H", "--hourly", nargs="?", const="today", metavar="DATE",
+                      help="one bar per hour for local DATE (YYYY-MM-DD; default today)")
     view.add_argument("-W", "--when", action="store_true",
                       help="weekday x hour patterns: free GPUs, who is usually on, idle and per-user stats")
     parser.add_argument("-w", "--width", type=int, default=50, help="bar width in dots (default 50)")
@@ -459,6 +484,16 @@ def main():
     args = parser.parse_args()
     if args.weeks < 1 or args.width < 1 or args.height < 2:
         parser.error("--weeks and --width must be positive; --height at least 2")
+
+    now = time.time()
+    day = None
+    if args.hourly is not None:
+        try:
+            day = dt.datetime.fromtimestamp(now).date() if args.hourly == "today" else dt.date.fromisoformat(args.hourly)
+        except ValueError:
+            parser.error("--hourly DATE must be YYYY-MM-DD")
+        if day > dt.datetime.fromtimestamp(now).date():
+            parser.error("--hourly DATE cannot be in the future")
 
     directory = gpuu.cache_directory()
     try:
@@ -470,9 +505,11 @@ def main():
         print("Warning: the running collector predates usage tracking; restart it with "
               "',gpuu --stop; ,gpuu --start'.", file=sys.stderr)
 
-    now = time.time()
     focus = set(args.user + ([ME] if args.me else []))
-    periods = day_periods(args.weeks, now) if args.daily else week_periods(args.weeks, now)
+    if day is not None:
+        periods = hour_periods(day, now)
+    else:
+        periods = day_periods(args.weeks, now) if args.daily else week_periods(args.weeks, now)
     gpus, totals = aggregate(load_usage(directory, state), periods, focus)
     if args.gpu:
         gpus = {uuid: gpu for uuid, gpu in gpus.items() if gpu[0] in args.gpu}
@@ -488,7 +525,9 @@ def main():
     painter = Painter(users, color)
     print(painter.legend(users))
     print()
-    if args.when:
+    if day is not None:
+        render_hourly(painter, gpus, totals, periods, args.width, day)
+    elif args.when:
         render_when(painter, gpus, load_usage(directory, state), periods[0][1], now, focus)
     elif args.avg:
         render_average(painter, gpus, totals, periods, args.width)
