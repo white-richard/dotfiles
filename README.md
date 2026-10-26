@@ -10,6 +10,17 @@ A collection of configs I've found useful.
 
 This symlinks each config directory into `~/.config/`.
 
+## Shared Skills
+
+Add skills to `skills/<skill-name>/SKILL.md` to share them between Codex and
+Claude Code.
+
+Run the full installer, or install just the skill links:
+
+```fish
+./install.fish -s
+```
+
 ## Obsidian
 
 On macOS, a LaunchAgent syncs selected settings between `obsidian/` and each vault

@@ -1,6 +1,6 @@
 #!/usr/bin/env fish
 
-argparse 'd' 'o' -- $argv
+argparse 'd' 'o' 's' -- $argv
 or exit 1
 
 set DOTFILES_DIR (cd (status dirname); and pwd)
@@ -11,10 +11,7 @@ set -l remote_cmd "cd ~/.dotfiles && git pull && fish install.fish"
 
 # --- Config ---
 
-# Configs to be symlinked
 set APPS fish nvim tmux zed git ruff stylua ghostty Code lazygit
-
-# Claude Code reads from ~/.claude rather than ~/.config
 set CLAUDE_DIR "$HOME/.claude"
 
 # Obsidian vaults (mac only) to link customization files into.
@@ -45,10 +42,6 @@ end
 
 echo "Starting..."
 echo "------------------------------------"
-
-# Create bashrc symlink
-rm "$HOME/.bashrc"
-ln -s "$DOTFILES_DIR/.bashrc" "$HOME/.bashrc"
 
 # Symlink each item of a dotfiles dir into a target dir
 # Extra args are item names to skip
@@ -81,13 +74,22 @@ function link_items --argument-names source_path target_path label
     end
 end
 
+link_items "$DOTFILES_DIR/skills" "$HOME/.agents/skills" codex/skills
+link_items "$DOTFILES_DIR/skills" "$CLAUDE_DIR/skills" claude/skills
+
+if set -q _flag_s
+    exit
+end
+
+# Create bashrc symlink
+rm "$HOME/.bashrc"
+ln -s "$DOTFILES_DIR/.bashrc" "$HOME/.bashrc"
+
 for app in $APPS
     link_items "$DOTFILES_DIR/$app" "$CONFIG_DIR/$app" $app
 end
 
-# Link skills individually since Claude Code keeps its own dirs in ~/.claude/skills
 link_items "$DOTFILES_DIR/claude" "$CLAUDE_DIR" claude skills
-link_items "$DOTFILES_DIR/claude/skills" "$CLAUDE_DIR/skills" claude/skills
 
 # Expose the formatter binaries that nvim and Zed share
 set -l MASON_BIN "$HOME/.local/share/nvim/mason/bin"
