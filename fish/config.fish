@@ -83,13 +83,8 @@ switch (uname)
 
 
     case Linux
-        # CUDA 12.8
-        if test -d /usr/local/cuda-12.8/bin
-            fish_add_path /usr/local/cuda-12.8/bin
-        end
-
-        if test -d /usr/local/cuda-12.8/lib64
-            set -gx LD_LIBRARY_PATH /usr/local/cuda-12.8/lib64 $LD_LIBRARY_PATH
+        if test -d /usr/local/cuda-12.6/bin
+            fish_add_path /usr/local/cuda-12.6/bin
         end
 end
 
