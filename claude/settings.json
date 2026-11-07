@@ -1,6 +1,9 @@
 {
   "permissions": {
-    "deny": ["Read(./secrets/**)", "Bash(git push *)"],
+    "deny": [
+      "Read(./secrets/**)",
+      "Bash(git push *)"
+    ],
     "ask": [
       "Read(./.env.*)",
       "Bash(git commit *)",
@@ -24,6 +27,9 @@
     },
     "claude-opus-5": {
       "effortLevel": "high"
+    },
+    "claude-opus-5-5": {
+      "autoCompactWindow": 200000
     }
   },
   "autoCompactWindow": 175000,
