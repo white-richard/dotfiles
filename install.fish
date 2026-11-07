@@ -81,6 +81,8 @@ if set -q _flag_s
     exit
 end
 
+python3 "$DOTFILES_DIR/scripts/codex_status_line.py"; or exit 1
+
 # Create bashrc symlink
 rm "$HOME/.bashrc"
 ln -s "$DOTFILES_DIR/.bashrc" "$HOME/.bashrc"
