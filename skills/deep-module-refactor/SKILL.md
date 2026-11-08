@@ -63,11 +63,14 @@ folder, whether to archive unused code, scope). Then stop for approval.
 ## 4. Execute, one stage at a time
 
 - Each commit is either a **refactor** or a **fix**, never both.
-  - Refactor: outputs are unchanged. Prove it with golden outputs saved before the change (scores,
+  - Refactor: outputs are unchanged. Prove it with snapshot outputs saved before the change (scores,
     passages, CSVs) reproduced exactly, on real data where available and a small synthetic case
     that runs anywhere.
-  - Fix: outputs change on purpose. A test reproduces the error first; the commit updates the golden
-    output and says what moved and why.
+  - Fix: outputs change on purpose. A test reproduces the error first; the commit updates the snapshot
+    and says what moved and why.
+- Snapshots are not gold. A snapshot holds whatever the code produced, errors included; it
+  detects change. Correctness comes from a fix's test, with the expected value checked by the
+  person against the source (e.g. the rendered page), and from human-checked reference data.
 - Parse, don't validate: once a value is parsed into a type, downstream code trusts it; delete the
   re-checks.
 - On-disk formats stay compatible unless the person approves a change.
