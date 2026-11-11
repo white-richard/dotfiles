@@ -4,33 +4,15 @@ line-length = 100
 
 [lint]
 fixable = ["ALL"]
+# Likely bugs, not style; a project's own [tool.ruff] replaces this.
 select = [
-    "E",   # Style errors
-    "F",   # Python errors
-    "I",   # Import sorting
-    "B",   # Bugbear rules
-    "UP",  # Python upgrade checks
-    "C4",  # Comprehension checks
-    "FA",  # Future annotations
-    "SIM", # Simplification
-    "PTH", # pathlib usage
-    "TC",  # Type-checking import conventions
-]
-extend-select = [
-    "ALL",
-    # "PTH105",
-    # "I",
-]
-ignore = [
-    "T201", # print statement
-    "RUF002", # ambiguous variable names
-    "ERA001", # commented-out code
-    "D100", # missing docstring in public module
-    "D101", # missing docstring in public class
-    "D205", # 1 blank line required between summary line and description
-    "N806", # variable in function should be lowercase
-    "D103", # Missing docstring in public function
-    "ANN001", # Missing type annotation for function argument `image`
+    "F",    # pyflakes: undefined names, unused imports and variables
+    "B",    # bugbear: late-binding closures, mutable defaults, zip without strict
+    "E9",   # syntax and IO errors
+    "E71",  # comparison to None/True, not in, is not
+    "E72",  # type() comparison, bare except
+    "PLE",  # pylint errors
+    "I",    # import sorting (auto-fixed)
 ]
 
 
