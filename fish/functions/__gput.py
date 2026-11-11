@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Plot per-week GPU usage by user from the history ,gpuu's collector records."""
+"""Show GPU usage totals and hourly activity from ,gpuu history."""
 import argparse
 import datetime as dt
 import json
@@ -458,30 +458,137 @@ def duration(hours):
     return "%dd %dh" % divmod(hours, 24) if hours >= 24 else "%dh" % hours
 
 
+def recent_day_periods(days, now):
+    """Last N local calendar days, including today through now."""
+    today = dt.datetime.fromtimestamp(now).date()
+    first = today - dt.timedelta(days=days - 1)
+    return [(day, local_epoch(day), min(local_epoch(day + dt.timedelta(days=1)), now))
+            for day in (first + dt.timedelta(days=i) for i in range(days))]
+
+
+def timeline(painter, rows, slots, end, user, cells):
+    """One shade per hour: unknown, idle, or fraction of observed time used."""
+    parts = []
+    for i, (_, begin, _) in enumerate(slots):
+        row = rows[i]
+        if begin >= end:
+            parts.append(" " * cells)
+            continue
+        observed = row["observed"]
+        used = sum(row["users"].values()) if user is None else row["users"].get(user, 0)
+        if observed <= 0:
+            glyph, style = "?", DIM
+        elif used <= 0:
+            glyph, style = "·", IDLE_COLOR
+        else:
+            glyph = "░▒▓█"[min(3, int(4 * used / observed))]
+            style = MY_COLOR if user is None else painter.styles[user][0]
+        parts.append(painter.paint(glyph * cells, style))
+    return "".join(parts)
+
+
+def render_report(records, periods, focus, indices, no_color=False):
+    gpus, totals = aggregate(records, periods, set())
+    gpus = {uuid: gpu for uuid, gpu in gpus.items()
+            if (not indices or gpu[0] in indices) and combine(totals[uuid])["observed"] > 0}
+    title = periods[0][0].isoformat()
+    if len(periods) > 1:
+        title += " → " + periods[-1][0].isoformat()
+    if not gpus:
+        print(title + "  No usage recorded.")
+        return
+    total = combine([row for uuid in gpus for row in totals[uuid]])
+    observed = total["observed"]
+    used = sum(total["users"].values())
+    span = sum(end - begin for _, begin, end in periods) * len(gpus)
+    users = {user for user, seconds in total["users"].items() if seconds > 0
+             and (not focus or user in focus)}
+    color = not no_color and sys.stdout.isatty() and "NO_COLOR" not in os.environ
+    painter = Painter(users, color)
+    print("%s  |  %.1f GPU-h  %.0f%% used  %.0f%% recorded" % (
+        title, used / 3600, 100 * used / observed, 100 * observed / span if span else 0))
+    if len(periods) > 1:
+        for user in sorted(users, key=lambda u: -total["users"][u]):
+            seconds = total["users"][user]
+            filled = max(1, round(12 * seconds / observed))
+            print("  %-14s %s%s %5.1fh" % (
+                user, painter.paint("█" * filled, painter.styles[user][0]),
+                "·" * (12 - filled), seconds / 3600))
+    print("░▒▓█ low→high use  · idle  ? no data  (hourly, local; shared time split)")
+    if focus and not users:
+        print("No activity recorded for selected users.")
+    label_width = max(9, min(18, max((len(user) + 2 for user in users), default=9)))
+    columns = shutil.get_terminal_size().columns
+    for i, (day, _begin, end) in enumerate(periods):
+        slots = hour_periods(day, local_epoch(day + dt.timedelta(days=1)))
+        cells = next(size for size in (3, 2, 1)
+                     if size == 1 or label_width + len(slots) * size + 17 <= columns)
+        # Stagger two-digit labels on narrow terminals so every hour remains legible.
+        axis_rows = 1 if cells >= 3 else 2
+        axes = [[" "] * (len(slots) * cells + (cells == 1)) for _ in range(axis_rows)]
+        for j, (local, _, _) in enumerate(slots):
+            axes[j % axis_rows][j * cells:j * cells + 2] = local.strftime("%H")
+        print("\n%s  %s" % (day.isoformat(), "local time"))
+        for axis in axes:
+            print(" " * (label_width + 2) + "".join(axis))
+        if len(slots) != 24:
+            print(" " * (label_width + 2) + "%d hours (clock change)" % len(slots))
+        _, hourly = aggregate(records, slots, set())
+        for uuid in sorted(gpus, key=lambda u: gpus[u][0]):
+            row = totals[uuid][i]
+            active_users = sorted((user for user in users if row["users"].get(user, 0) > 0),
+                                  key=lambda u: -row["users"][u])
+            if not active_users:
+                continue
+            observed = row["observed"]
+            used = sum(row["users"].values())
+            print("GPU %s  %.1fh  %.0f%%" % (gpus[uuid][0], used / 3600, 100 * used / observed))
+            for user in active_users:
+                seconds = row["users"].get(user, 0)
+                label = "  " + user
+                if len(label) > label_width:
+                    label = label[:label_width - 1] + "…"
+                print("%s │%s│ %5.1fh" % (
+                    painter.paint(label.ljust(label_width), painter.styles[user][0]),
+                    timeline(painter, hourly[uuid], slots, end, user, cells), seconds / 3600))
+
+
 def main():
     parser = argparse.ArgumentParser(
         prog=",gput",
-        description="Plot GPU usage per week by user (root excluded).",
-        epilog="Bars show share of observed time; history begins when ,gpuu's collector "
-        "started tracking usage. Shared GPUs split time evenly between users.",
+        description="GPU activity timelines. Default: today.",
+        epilog="Examples: ,gput | ,gput 7 | ,gput 7 --user alice | ,gput --me. "
+        "Days include today through now. History begins when ,gpuu started collecting.",
     )
-    parser.add_argument("-n", "--weeks", type=int, default=4, metavar="N", help="weeks to show (default 4)")
+    parser.add_argument("days", nargs="?", type=int, metavar="N", help="last N calendar days, including today")
+    parser.add_argument("--days", type=int, dest="day_count", metavar="N", help="same as positional N")
+    charts = parser.add_argument_group("Optional legacy charts")
+    charts.add_argument("-n", "--weeks", type=int, metavar="N", help="legacy weekly chart for N weeks")
     parser.add_argument("-u", "--user", action="append", default=[], metavar="USER",
-                        help="highlight USER; everyone else shows as 'other users' (repeatable)")
+                        help="show activity for USER; keep overall totals (repeatable)")
     parser.add_argument("-m", "--me", action="store_true", help="same as --user %s" % ME)
     parser.add_argument("-g", "--gpu", type=int, action="append", default=[], metavar="INDEX",
                         help="only show GPU INDEX (repeatable)")
-    view = parser.add_mutually_exclusive_group()
+    view = charts.add_mutually_exclusive_group()
     view.add_argument("-a", "--avg", action="store_true", help="one bar per GPU averaged over N weeks")
     view.add_argument("-d", "--daily", action="store_true", help="column chart with one column per day")
     view.add_argument("-H", "--hourly", nargs="?", const="today", metavar="DATE",
                       help="one bar per hour for local DATE (YYYY-MM-DD; default today)")
     view.add_argument("-W", "--when", action="store_true",
                       help="weekday x hour patterns: free GPUs, who is usually on, idle and per-user stats")
-    parser.add_argument("-w", "--width", type=int, default=50, help="bar width in dots (default 50)")
-    parser.add_argument("--height", type=int, default=10, help="daily chart height in dots (default 10)")
+    charts.add_argument("-w", "--width", type=int, default=50, help="bar width in dots (default 50)")
+    charts.add_argument("--height", type=int, default=10, help="daily chart height in dots (default 10)")
     parser.add_argument("--no-color", action="store_true", help="disable colors")
     args = parser.parse_args()
+    if args.days is not None and args.day_count is not None:
+        parser.error("choose N or --days N, not both")
+    days = args.days if args.days is not None else args.day_count
+    if days is not None and days < 1:
+        parser.error("days must be positive")
+    legacy = args.weeks is not None or args.avg or args.daily or args.hourly is not None or args.when
+    if days is not None and legacy:
+        parser.error("N/--days cannot be combined with legacy chart options")
+    args.weeks = args.weeks if args.weeks is not None else 4
     if args.weeks < 1 or args.width < 1 or args.height < 2:
         parser.error("--weeks and --width must be positive; --height at least 2")
 
@@ -506,6 +613,9 @@ def main():
               "',gpuu --stop; ,gpuu --start'.", file=sys.stderr)
 
     focus = set(args.user + ([ME] if args.me else []))
+    if not legacy:
+        render_report(load_usage(directory, state), recent_day_periods(days or 1, now), focus, args.gpu, args.no_color)
+        return 0
     if day is not None:
         periods = hour_periods(day, now)
     else:

@@ -1,4 +1,4 @@
-function ,gput --description 'Plot per-week GPU usage by user from ,gpuu history'
+function ,gput --description 'Show GPU totals and activity hours: ,gput [DAYS] [--user USER | --me]'
     if not command -q python3
         echo 'Error: ,gput requires python3' >&2
         return 1
