@@ -77,63 +77,91 @@
     {
       "host": "wpeb-server",
       "args": [],
-      "projects": [],
+      "projects": []
     },
     {
       "host": "home",
       "args": [],
       "projects": [
         {
-          "paths": ["/home/richw/.code/archive/pasta/./"],
+          "paths": [
+            "/home/richw/.code/archive/pasta/./"
+          ]
         },
         {
-          "paths": ["/home/richw/.code/nyx_lang/./"],
+          "paths": [
+            "/home/richw/.code/nyx_lang/./"
+          ]
         },
         {
-          "paths": ["/home/richw/.code/open-penny/./"],
-        },
-      ],
+          "paths": [
+            "/home/richw/.code/open-penny/./"
+          ]
+        }
+      ]
     },
     {
       "host": "wpeb-print",
       "args": [],
-      "projects": [],
+      "projects": []
     },
     {
       "host": "wpeb-mary",
       "args": [],
-      "projects": [],
+      "projects": []
     },
     {
       "host": "wpeb-desk",
       "args": [],
       "projects": [
         {
-          "paths": ["/home/richw/.code/conf-wall"],
+          "paths": [
+            "/home/richw/.code/conf-wall"
+          ]
         },
         {
-          "paths": ["/home/richw/.code/gpu-mode/lecture_001/./"],
+          "paths": [
+            "/home/richw/.code/gpu-mode/lecture_001/./"
+          ]
         },
         {
-          "paths": ["/home/richw/.code/tta-mammo/./"],
-        },
-      ],
+          "paths": [
+            "/home/richw/.code/tta-mammo/./"
+          ]
+        }
+      ]
     },
     {
       "host": "ankita",
       "args": [],
       "projects": [
         {
-          "paths": ["/home/richw/.code/genesis-agent/./"],
+          "paths": [
+            "/home/richw/.code/diffusion-prt/./"
+          ]
         },
         {
-          "paths": ["/home/richw/.code/mammoclip/./"],
+          "paths": [
+            "/home/richw/.code/genesis-agent/./"
+          ]
         },
         {
-          "paths": ["/home/richw/.code/tta-mammo/./"],
+          "paths": [
+            "/home/richw/.code/it3"
+          ]
         },
-      ],
-    },
+        {
+          "paths": [
+            "/home/richw/.code/mammoclip/./"
+          ]
+        },
+        {
+          "paths": [
+            "/home/richw/.code/tta-mammo/./"
+          ]
+        }
+      ]
+    }
   ],
   "telemetry": {
     "diagnostics": false,

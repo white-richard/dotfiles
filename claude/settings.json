@@ -11,6 +11,7 @@
     ],
     "defaultMode": "auto"
   },
+  "model": "opus",
   "worktree": {
     "baseRef": "fresh"
   },
@@ -29,7 +30,11 @@
       "effortLevel": "high"
     },
     "claude-opus-5-5": {
+      "effortLevel": "medium",
       "autoCompactWindow": 200000
+    },
+    "claude-fable-5-1": {
+      "effortLevel": "high"
     }
   },
   "autoCompactWindow": 175000,
