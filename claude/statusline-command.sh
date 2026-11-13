@@ -1,5 +1,5 @@
 #!/bin/bash
-# Claude Code statusline: model | effort | context% | git branch | dir | worktree
+# Claude Code statusline: model | effort | context% | git branch | dir | worktree | limits
 input=$(cat)
 
 model=$(echo "$input" | jq -r '.model.display_name')
@@ -45,5 +45,17 @@ out="${out}${sep}${BLUE}${dir_display}${RESET}"
 if [ -n "$worktree" ]; then
   out="${out}${sep}${GRAY}wt:${worktree}${RESET}"
 fi
+
+for window in five_hour seven_day; do
+  remaining_pct=$(echo "$input" | jq -r --arg window "$window" '.rate_limits[$window].used_percentage | select(. != null) | 100 - .')
+  if [ -n "$remaining_pct" ]; then
+    case "$window" in
+      five_hour) label="5h" ;;
+      seven_day) label="weekly" ;;
+    esac
+    remaining=$(printf '%.0f' "$remaining_pct")
+    out="${out}${sep}${GREEN}${label}: ${remaining}% left${RESET}"
+  fi
+done
 
 printf "%b\n" "$out"
