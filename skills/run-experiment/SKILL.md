@@ -6,8 +6,21 @@ description: Use when planning, configuring, launching, resuming or summarizing 
 # Running experiments
 
 **I must be able to run, debug and interpret any experiment without the agent.** If this repository
-already has an experiment runner (see "This project" in AGENTS.md), use it and apply these rules
-through it rather than writing a second launcher.
+already has an experiment runner, use it and apply these rules through it rather than writing a
+second launcher.
+
+Use this only when the result will be evidence for a claim. A quick check is a probe (`probe` skill).
+
+## Question gate
+
+Before any code, the README opens with this block. I write the prediction; never fill it in for me.
+If I haven't written it, ask. If both outcomes lead to the same next step, say so and stop.
+
+```
+Serves: <open question or claim in RESEARCH.md>
+I predict: <one line, rough confidence>
+If yes → <next step>. If no → <next step>.
+```
 
 ## Before the run
 
@@ -17,9 +30,7 @@ through it rather than writing a second launcher.
   question it answers. This is the minimum; more can be added after the run.
 - When reproducing published work, compare against both the paper and the authors' code, and list
   every difference in the README. Don't add choices neither makes without a stated reason.
-- Give every method the same fair tuning of its nuisance settings. Make the most expensive parts
-  possible to switch off in the config.
-- Tune and select only on validation data. The test set is read only for the final, chosen settings.
+- When methods are compared, ask me how to tune them fairly.
 - Confirm the exact launch command with me before starting a long run.
 
 ## The config file
@@ -56,3 +67,20 @@ through it rather than writing a second launcher.
   results back from the tracker.
 - The README explains every output column and how to view the results.
 - Keep final model weights. Resume state from finished runs can be deleted.
+
+## Verdict
+
+When results are in, put this at the top of the README, above the question gate:
+
+```
+Answer: <one line>
+Prediction: held / failed / surprise
+Changes RESEARCH.md: <belief and new confidence, or new open question>
+```
+
+Draft it from the results and propose the RESEARCH.md edit; I confirm both. If the result fills
+an evidence slot in the outline, link it there.
+
+## Writing
+
+Keep READMEs and summaries short: the answer first, then only what I need to check it.
