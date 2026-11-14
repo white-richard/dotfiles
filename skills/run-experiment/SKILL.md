@@ -38,6 +38,8 @@ If yes → <next step>. If no → <next step>.
 - One TOML file per experiment, next to its launcher, holds every setting. Change settings there,
   not in code. Group it into tables by purpose, e.g. `[inputs]`, `[data]`, `[run]`, `[criteria]`,
   and the published values being compared against.
+- If the repository's runner fixes the config format, keep its format and put the remaining settings
+  and success criteria at the top of the script instead.
 - A short comment on each value says where it comes from: the paper (page or figure), the authors'
   code, or our own choice with the reason.
 - Pin every input file by path and sha256; a `check` stage verifies them before anything runs.
@@ -56,21 +58,21 @@ If yes → <next step>. If no → <next step>.
 - Error messages say what went wrong and what to do next.
 - The launcher builds the planned figures and tables from the run directories; rerunning the
   summarize stage rebuilds them.
-- The launcher syncs results to the experiment tracker without being asked: in the background as
-  runs finish and once more when a stage ends; one tracker run per run directory plus a summary
-  run per stage with the figures and tables. A failed sync keeps results on disk, prints the
-  command that redoes it, and makes the stage exit non-zero.
+- If the project uses an experiment tracker, the launcher syncs results to it without being asked:
+  in the background as runs finish and once more when a stage ends; one tracker run per run
+  directory plus a summary run per stage with the figures and tables. A failed sync keeps results
+  on disk, prints the command that redoes it, and makes the stage exit non-zero.
 
 ## Results
 
 - The results directory on disk is the only source of truth. The tracker mirrors it; nothing reads
   results back from the tracker.
 - The README explains every output column and how to view the results.
-- `RESULTS.md` next to the README is where I look at results; I should never need to open `out/`.
-  One section per question. Embed each current figure (`![](out/...)`) with two lines: `Read:` the
-  axes and encodings, `Shows:` the takeaway.
+- `RESULTS.md` next to the README is where I look at results; I should never need to open the
+  output files. One section per question. Embed each current figure (`![](<outputs>/...)`) with
+  two lines: `Read:` the axes and encodings, `Shows:` the takeaway.
 - Link only the current output version. Older `_vN` folders stay on disk, unmentioned.
-- Keep final model weights. Resume state from finished runs can be deleted.
+- Keep final model weights, if any. Resume state from finished runs can be deleted.
 
 ## Verdict
 
