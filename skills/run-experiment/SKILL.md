@@ -66,11 +66,15 @@ If yes → <next step>. If no → <next step>.
 - The results directory on disk is the only source of truth. The tracker mirrors it; nothing reads
   results back from the tracker.
 - The README explains every output column and how to view the results.
+- `RESULTS.md` next to the README is where I look at results; I should never need to open `out/`.
+  One section per question. Embed each current figure (`![](out/...)`) with two lines: `Read:` the
+  axes and encodings, `Shows:` the takeaway.
+- Link only the current output version. Older `_vN` folders stay on disk, unmentioned.
 - Keep final model weights. Resume state from finished runs can be deleted.
 
 ## Verdict
 
-When results are in, put this at the top of the README, above the question gate:
+When results are in, put this at the top of `RESULTS.md`:
 
 ```
 Answer: <one line>
