@@ -42,6 +42,7 @@ export NVM_DIR="$HOME/.nvm"
 export CUDA_DEVICE_ORDER="PCI_BUS_ID"
 
 if [ "$(hostname)" = "ankita" ]; then
+    export PATH="$HOME/.local/opt/ollama/0.40.16/bin:$PATH"
     export GOROOT=$HOME/.local/go
     export GOPATH=$HOME/go
     export PATH=$PATH:$GOROOT/bin:$GOPATH/bin

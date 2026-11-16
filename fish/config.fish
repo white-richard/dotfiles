@@ -89,6 +89,7 @@ switch (uname)
 end
 
 if test (hostname) = "ankita"
+    fish_add_path --path "$HOME/.local/opt/ollama/0.40.16/bin"
     set -gx GOROOT "$HOME/.local/go"
     set -gx GOPATH "$HOME/go"
 
