@@ -7,6 +7,7 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "diff_view_style": "split",
   "cli_default_open_behavior": "existing_window",
   // Extensions are otherwise untracked by this repo; list them so a fresh
   // machine ends up with the same language + formatter support.
