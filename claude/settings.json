@@ -1,14 +1,11 @@
 {
   "permissions": {
-    "deny": [
-      "Read(./secrets/**)",
-      "Bash(git push *)"
-    ],
+    "deny": ["Read(./secrets/**)", "Bash(git push *)"],
     "ask": [
       "Read(./.env.*)",
-      "Bash(git commit *)",
       "Bash(dangerouslyDisableSandbox:true)"
     ],
+    "allow": ["Bash(git commit *)"],
     "defaultMode": "auto"
   },
   "model": "opus",

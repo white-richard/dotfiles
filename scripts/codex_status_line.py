@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Apply the shared status bar without replacing machine-local Codex settings."""
+"""Apply shared Codex terminal preferences to the local config."""
 
 import json
 import os
@@ -13,10 +13,11 @@ REPO = Path(__file__).resolve().parents[1]
 def update_config(text, items):
     # JSON string arrays are also valid TOML arrays.
     setting = "status_line = " + json.dumps(items) + "\n"
+    vim_setting = "vim_mode_default = true\n"
     tui = re.search(r"(?m)^[ \t]*\[tui\][ \t]*(?:#[^\n]*)?\n?", text)
     if tui is None:
         separator = ("\n" if text.endswith("\n") else "\n\n") if text else ""
-        return text + separator + "[tui]\n" + setting
+        return text + separator + "[tui]\n" + setting + vim_setting
 
     start = tui.end()
     # Array entries can also start with '['; stop only at a table header.
@@ -30,6 +31,18 @@ def update_config(text, items):
         raise ValueError("Expected tui.status_line to be an array; config left untouched")
     else:
         body = setting + body
+
+    vim_value = re.search(
+        r"""(?m)^[ \t]*(?:vim_mode_default|"vim_mode_default"|'vim_mode_default')[ \t]*=[ \t]*([^#\n]*)""",
+        body,
+    )
+    if vim_value is None:
+        body = vim_setting + body
+    elif vim_value[1].strip() == "false":
+        start_value = vim_value.start(1)
+        body = body[:start_value] + "true" + body[start_value + len("false"):]
+    elif vim_value[1].strip() != "true":
+        raise ValueError("Expected tui.vim_mode_default to be a boolean")
     prefix = text[:start]
     if not prefix.endswith("\n"):
         prefix += "\n"
@@ -46,7 +59,7 @@ def main():
     if updated != original:
         config.parent.mkdir(parents=True, exist_ok=True)
         config.write_text(updated)
-        print("Updated: codex/status_line")
+        print("Updated: Codex status line and Vim mode")
 
 
 if __name__ == "__main__":

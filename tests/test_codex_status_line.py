@@ -12,7 +12,7 @@ spec.loader.exec_module(status)
 class CodexStatusLineTests(unittest.TestCase):
     def test_create_config(self):
         self.assertEqual(status.update_config("", ["model"]),
-                         '[tui]\nstatus_line = ["model"]\n')
+                         '[tui]\nstatus_line = ["model"]\nvim_mode_default = true\n')
 
     def test_replace_multiline_preserving_local_settings(self):
         prefix = 'model = "local-model"\n[projects."/machine/path"]\ntrust_level = "trusted"\n[tui]\nvim_mode_default = true\n'
@@ -30,12 +30,20 @@ class CodexStatusLineTests(unittest.TestCase):
     def test_add_missing_table_and_final_newline(self):
         original = 'model = "local"'
         self.assertEqual(status.update_config(original, ["model"]),
-                         original + '\n\n[tui]\nstatus_line = ["model"]\n')
-        self.assertEqual(status.update_config('[tui]', []), '[tui]\nstatus_line = []\n')
+                         original + '\n\n[tui]\nstatus_line = ["model"]\nvim_mode_default = true\n')
+        self.assertEqual(status.update_config('[tui]', []),
+                         '[tui]\nvim_mode_default = true\nstatus_line = []\n')
 
     def test_inline_array_and_comment(self):
         self.assertEqual(status.update_config('[tui]\nstatus_line = ["old"] # fields\n', []),
-                         '[tui]\nstatus_line = []\n')
+                         '[tui]\nvim_mode_default = true\nstatus_line = []\n')
+
+    def test_enable_vim_mode_preserving_comment_and_other_tables(self):
+        original = ('[tui]\nstatus_line = []\nvim_mode_default = false # composer\n'
+                    '[tui.other]\nvim_mode_default = false\n')
+        updated = status.update_config(original, [])
+        self.assertEqual(updated, original.replace('false # composer', 'true # composer'))
+        self.assertEqual(status.update_config(updated, []), updated)
 
     def test_unexpected_value_fails_without_duplicate_key(self):
         with self.assertRaises(ValueError):
